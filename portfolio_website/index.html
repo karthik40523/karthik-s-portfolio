@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Karthik Kumar Reddy | Software Developer</title>
+    <meta name="description"
+        content="Portfolio of G. Karthik Kumar Reddy — Software Developer specializing in AI-powered full-stack applications.">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+
+<body>
+    <!-- Fire Particles Background -->
+    <canvas id="fire-particles"></canvas>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="logo" id="site-logo">KKR</div>
+        <ul class="nav-links">
+            <li><a href="#about">About</a></li>
+            <li><a href="#education">Education</a></li>
+            <li><a href="#skills">Skills</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li>
+                <button id="theme-toggle" class="theme-btn" aria-label="Toggle Theme">
+                    <svg id="theme-icon-sun" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                    <svg id="theme-icon-moon" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" style="display: none;">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                </button>
+            </li>
+            <li><a href="#contact" class="btn-outline">Hire Me</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero" id="home">
+        <div class="hero-blob hero-blob-1"></div>
+        <div class="hero-blob hero-blob-2"></div>
+        <div class="hero-content">
+            <p class="tagline anim-hero-tagline" id="hero-tagline">Software Developer | Full-Stack | AI</p>
+            <h1 class="anim-hero-title" id="hero-title">Building <span class="highlight">AI-Powered</span>
+                Full-Stack Solutions</h1>
+            <p class="subtitle anim-hero-subtitle" id="hero-subtitle"></p>
+            <div class="hero-btns anim-hero-btns">
+                <a href="#projects" class="btn-primary">Explore Work <span class="arrow">→</span></a>
+                <a href="#contact" class="btn-secondary">Let's Connect</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- About Section -->
+    <section id="about" class="section">
+        <div class="container fade-in-up">
+            <h2 class="section-title">Who I Am</h2>
+            <div class="about-grid">
+                <div class="about-text">
+                    <p id="about-p1">Software Developer with experience in building AI-powered full-stack applications
+                        using React, Flask, and PostgreSQL.</p>
+                    <p id="about-p2">Passionate about developing scalable, secure, and data-driven systems.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Education Section -->
+    <section id="education" class="section bg-alt">
+        <div class="container fade-in-up">
+            <h2 class="section-title">Education</h2>
+            <div class="education-timeline" id="education-container"></div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="section">
+        <div class="container fade-in-up">
+            <h2 class="section-title">Tech Arsenal</h2>
+            <div class="skills-bento" id="skills-container"></div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="section bg-alt">
+        <div class="container">
+            <h2 class="section-title fade-in-up">Projects worked on</h2>
+            <div class="projects-grid fade-in-up" id="projects-container"></div>
+        </div>
+    </section>
+
+    <!-- Certifications Section -->
+    <section id="certifications" class="section">
+        <div class="container fade-in-up">
+            <h2 class="section-title">Certifications</h2>
+            <div class="certifications-grid" id="certifications-container"></div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="section bg-alt">
+        <div class="container fade-in-up">
+            <div class="contact-wrapper">
+                <div class="contact-info slide-in-left">
+                    <h2 class="section-title" style="text-align: left;">Let's Build<br>Something <span
+                            class="highlight">Great</span></h2>
+                    <p class="contact-cta" id="contact-text">Have a project in mind or want to collaborate? Let's
+                        connect.</p>
+
+                    <div class="social-links-vertical">
+                        <a href="#" id="link-linkedin" class="social-link-item" target="_blank">
+                            <span class="platform"><i class="fa-brands fa-linkedin"></i> LinkedIn</span>
+                            <span class="url">Connect with me</span>
+                        </a>
+                        <a href="#" id="link-github" class="social-link-item" target="_blank">
+                            <span class="platform"><i class="fa-brands fa-github"></i> GitHub</span>
+                            <span class="url">View repositories</span>
+                        </a>
+                        <a href="tel:+916304548483" class="social-link-item">
+                            <span class="platform"><i class="fa-solid fa-phone"></i> Phone</span>
+                            <span class="url">+91 6304548483</span>
+                        </a>
+                        <a href="mailto:karthikkumargonapati@gmail.com" id="link-email" class="social-link-item">
+                            <span class="platform"><i class="fa-solid fa-envelope"></i> Email</span>
+                            <span class="url">karthikkumargonapati@gmail.com</span>
+                        </a>
+                    </div>
+                </div>
+
+                <form action="https://api.web3forms.com/submit" method="POST" class="contact-form slide-in-right">
+                    <input type="hidden" name="access_key" value="87f18a6d-2cd9-4d63-8f64-a35cefade500">
+                    <div class="form-group">
+                        <input type="text" name="name" placeholder="Name" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" name="email" placeholder="Email" required>
+                    </div>
+                    <div class="form-group">
+                        <textarea name="message" placeholder="Tell me about your project..." rows="6" required></textarea>
+                    </div>
+                    <button type="submit" class="btn-primary" style="width: 100%;">Send Message <span
+                            class="arrow">↗</span></button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
+            <p id="footer-text">&copy; 2026 G. Karthik Kumar Reddy. All Rights Reserved.</p>
+            <div class="footer-socials"></div>
+        </div>
+    </footer>
+
+    <!-- ================= EDIT DASHBOARD MODAL ================= -->
+    <div id="admin-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>⚡ Portfolio Dashboard</h2>
+                <button id="close-modal" class="close-btn">&times;</button>
+            </div>
+
+            <div class="modal-body">
+                <div class="admin-tabs">
+                    <button class="tab-btn active" data-tab="tab-general">General</button>
+                    <button class="tab-btn" data-tab="tab-skills">Skills</button>
+                    <button class="tab-btn" data-tab="tab-projects">Projects</button>
+                    <button class="tab-btn" data-tab="tab-links">Links</button>
+                </div>
+
+                <div class="tab-content active" id="tab-general">
+                    <div class="admin-group">
+                        <label>Default Theme</label>
+                        <select id="input-theme"
+                            style="width: 100%; padding: 0.8rem; background: #0a0a0a; border: 1px solid #333; border-radius: 6px; color: #fff; font-family: var(--font-body);">
+                            <option value="dark">Dark Theme</option>
+                            <option value="light">Light Theme</option>
+                        </select>
+                    </div>
+                    <div class="admin-group">
+                        <label>Logo Text</label>
+                        <input type="text" id="input-logo">
+                    </div>
+                    <div class="admin-group">
+                        <label>Hero Tagline</label>
+                        <input type="text" id="input-tagline">
+                    </div>
+                    <div class="admin-group">
+                        <label>Hero Title (Use &lt;span class="highlight"&gt; for accent color)</label>
+                        <textarea id="input-title" rows="2"></textarea>
+                    </div>
+                    <div class="admin-group">
+                        <label>Hero Subtitle</label>
+                        <textarea id="input-subtitle" rows="3"></textarea>
+                    </div>
+                    <div class="admin-group">
+                        <label>About Paragraph 1</label>
+                        <textarea id="input-about1" rows="4"></textarea>
+                    </div>
+                    <div class="admin-group">
+                        <label>About Paragraph 2</label>
+                        <textarea id="input-about2" rows="4"></textarea>
+                    </div>
+                    <div class="admin-group">
+                        <label>Contact CTA text</label>
+                        <input type="text" id="input-contact-text">
+                    </div>
+                    <div class="admin-group">
+                        <label>Footer Text</label>
+                        <input type="text" id="input-footer">
+                    </div>
+                    <button class="btn-primary save-general-btn">Save General Settings</button>
+                </div>
+
+                <div class="tab-content" id="tab-skills">
+                    <button id="add-skill-btn" class="btn-outline" style="margin-bottom: 1rem;">+ Add New Skill</button>
+                    <div id="admin-skills-list" class="admin-list"></div>
+                </div>
+
+                <div class="tab-content" id="tab-projects">
+                    <button id="add-project-btn" class="btn-outline" style="margin-bottom: 1rem;">+ Add New
+                        Project</button>
+                    <div id="admin-projects-list" class="admin-list"></div>
+                </div>
+
+                <div class="tab-content" id="tab-links">
+                    <div class="admin-group">
+                        <label>LinkedIn URL</label>
+                        <input type="url" id="input-link-linkedin">
+                    </div>
+                    <div class="admin-group">
+                        <label>GitHub URL</label>
+                        <input type="url" id="input-link-github">
+                    </div>
+                    <div class="admin-group">
+                        <label>Instagram URL</label>
+                        <input type="url" id="input-link-instagram">
+                    </div>
+                    <div class="admin-group">
+                        <label>Email Address</label>
+                        <input type="email" id="input-link-email">
+                    </div>
+                    <button class="btn-primary save-links-btn">Save Links</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
