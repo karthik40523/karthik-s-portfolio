@@ -1,7 +1,7 @@
 // ==========================================
 // DEFAULT DATA STRUCTURE
 // ==========================================
-const DATA_VERSION = 5; // Increment to force localStorage reset
+const DATA_VERSION = 8; // Increment to force localStorage reset
 
 const defaultData = {
     version: DATA_VERSION,
@@ -54,9 +54,12 @@ const defaultData = {
         { degree: "10th Grade", institution: "Sri Chaitanya School, Ananthapur", period: "06/2019 – 03/2020", score: "Percentage: 100%" }
     ],
     certifications: [
-        "Foundations of Cybersecurity – Coursera",
-        "Ethical Hacker – Cisco",
-        "IBM Skills Network: SQL and Relational Databases 101"
+        { id: 1, name: "Foundations of Cybersecurity – Coursera", link: "https://drive.google.com/drive/folders/1H_O9zO90uwv6Lpw2AAJ3VIw1RNKnzBi0?usp=drive_link" },
+        { id: 2, name: "Ethical Hacker – Cisco", link: "https://drive.google.com/drive/folders/1H_O9zO90uwv6Lpw2AAJ3VIw1RNKnzBi0?usp=drive_link" },
+        { id: 3, name: "IBM Skills Network: SQL and Relational Databases 101", link: "https://drive.google.com/drive/folders/1H_O9zO90uwv6Lpw2AAJ3VIw1RNKnzBi0?usp=drive_link" },
+        { id: 4, name: "Cyber Threat Management – Cisco", link: "https://drive.google.com/drive/folders/1H_O9zO90uwv6Lpw2AAJ3VIw1RNKnzBi0?usp=drive_link" },
+        { id: 5, name: "Endpoint Security – Cisco", link: "https://drive.google.com/drive/folders/1H_O9zO90uwv6Lpw2AAJ3VIw1RNKnzBi0?usp=drive_link" },
+        { id: 6, name: "Introduction to Cybersecurity – Cisco", link: "https://drive.google.com/drive/folders/1H_O9zO90uwv6Lpw2AAJ3VIw1RNKnzBi0?usp=drive_link" }
     ]
 };
 
@@ -189,12 +192,32 @@ function renderCertifications() {
     container.innerHTML = '';
 
     portfolioData.certifications.forEach((cert, i) => {
+        const isString = typeof cert === 'string';
+        const name = isString ? cert : cert.name;
+        const link = isString ? '' : cert.link;
+
         const div = document.createElement('div');
-        div.className = 'cert-badge fade-in-up';
+        div.className = 'cert-card fade-in-up';
         div.style.setProperty('--delay', `${i * 0.12}s`);
+        
+        let linkSection = '';
+        if (link && link !== "#" && link.trim() !== "") {
+            linkSection = `
+                <div class="cert-link-section">
+                    <a href="${link}" target="_blank" class="cert-link-btn">
+                        <i class="fa-solid fa-external-link-alt"></i>
+                        <span>View Certificate</span>
+                    </a>
+                </div>
+            `;
+        }
+
         div.innerHTML = `
-            <i class="fa-solid fa-award"></i>
-            <span>${cert}</span>
+            <div class="cert-header">
+                <i class="fa-solid fa-award"></i>
+                <span class="cert-name">${name}</span>
+            </div>
+            ${linkSection}
         `;
         container.appendChild(div);
     });
@@ -218,6 +241,8 @@ document.addEventListener('DOMContentLoaded', () => {
     initUIBehaviors();
     initAdminDashboard();
     initFireParticles();
+    initPreloader();
+    initCustomCursor();
 });
 
 function initTheme() {
@@ -317,6 +342,8 @@ function initUIBehaviors() {
     });
 
     animatedElements.forEach(el => scrollObserver.observe(el));
+
+    init3DCardTilt();
 
     // Hero blob parallax on mouse move
     const heroBlob1 = document.querySelector('.hero-blob-1');
@@ -432,6 +459,21 @@ function initAdminDashboard() {
         renderAdminProjects();
         renderProjects();
     });
+
+    // Add new certification
+    if(document.getElementById('add-cert-btn')) {
+        document.getElementById('add-cert-btn').addEventListener('click', () => {
+            const newId = Date.now();
+            portfolioData.certifications.push({
+                id: newId,
+                name: "New Certification",
+                link: ""
+            });
+            saveData();
+            renderAdminCertifications();
+            renderCertifications();
+        });
+    }
 }
 
 function initFireParticles() {
@@ -550,6 +592,7 @@ function populateAdminForms() {
 
     renderAdminSkills();
     renderAdminProjects();
+    renderAdminCertifications();
 }
 
 function renderAdminSkills() {
@@ -613,6 +656,37 @@ function renderAdminProjects() {
     });
 }
 
+function renderAdminCertifications() {
+    const list = document.getElementById('admin-certs-list');
+    if (!list) return;
+    list.innerHTML = '';
+
+    portfolioData.certifications.forEach((cert, i) => {
+        // Ensure object structure for backwards compatibility
+        if (typeof cert === 'string') {
+            cert = { id: Date.now() + i, name: cert, link: "" };
+            portfolioData.certifications[i] = cert;
+        }
+
+        const div = document.createElement('div');
+        div.className = 'admin-list-item';
+        const linkPreview = cert.link && cert.link.trim() !== "" ? `<a href="${cert.link}" target="_blank" style="color: #6366f1; font-size: 0.9rem;"><i class="fa-solid fa-link"></i> Link Preview</a>` : '<span style="color: #999; font-size: 0.9rem;">No link added yet</span>';
+        div.innerHTML = `
+            <button class="delete-item-btn" onclick="deleteCert(${cert.id})">Delete</button>
+            <div class="admin-group">
+                <label><i class="fa-solid fa-certificate"></i> Certification Name</label>
+                <input type="text" value="${cert.name}" onchange="updateCert(${cert.id}, 'name', this.value)" placeholder="e.g., AWS Solutions Architect">
+            </div>
+            <div class="admin-group">
+                <label><i class="fa-solid fa-link"></i> Certificate Link</label>
+                <input type="url" value="${cert.link || ''}" onchange="updateCert(${cert.id}, 'link', this.value)" placeholder="https://example.com/certificate">
+                <small style="color: #999; margin-top: 0.5rem; display: block;">Add the URL to view/verify your certificate. ${linkPreview}</small>
+            </div>
+        `;
+        list.appendChild(div);
+    });
+}
+
 // Admin API Functions (Global scope for inline onclick)
 window.updateSkill = function (id, field, value) {
     const skill = portfolioData.skills.find(s => s.id === id);
@@ -652,3 +726,129 @@ window.deleteProject = function (id) {
         renderProjects();
     }
 };
+
+window.updateCert = function (id, field, value) {
+    const cert = portfolioData.certifications.find(c => c.id === id);
+    if (cert) cert[field] = value;
+    saveData();
+    renderCertifications();
+};
+
+window.deleteCert = function (id) {
+    if (confirm('Delete this certification?')) {
+        portfolioData.certifications = portfolioData.certifications.filter(c => c.id !== id);
+        saveData();
+        renderAdminCertifications();
+        renderCertifications();
+    }
+};
+
+// ==========================================
+// ADVANCED UI / UX FEATURES
+// ==========================================
+
+function initPreloader() {
+    const preloader = document.getElementById('preloader');
+    if (preloader) {
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                preloader.style.opacity = '0';
+                preloader.style.visibility = 'hidden';
+                preloader.style.transition = 'opacity 0.6s ease-out, visibility 0.6s ease-out';
+                setTimeout(() => {
+                    preloader.remove();
+                }, 600);
+            }, 500); // 500ms min delay for aesthetic purposes
+        });
+    }
+}
+
+function initCustomCursor() {
+    const cursorDot = document.getElementById('cursor-dot');
+    const cursorOutline = document.getElementById('cursor-outline');
+    
+    if (!cursorDot || !cursorOutline) return;
+    
+    // Disable completely on touch devices
+    if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
+        cursorDot.style.display = 'none';
+        cursorOutline.style.display = 'none';
+        return;
+    }
+
+    let dotX = 0, dotY = 0;
+    let outlineX = 0, outlineY = 0;
+
+    window.addEventListener('mousemove', (e) => {
+        dotX = e.clientX;
+        dotY = e.clientY;
+        
+        cursorDot.style.transform = `translate(${dotX}px, ${dotY}px)`;
+    });
+
+    // Smooth animation for outline
+    function animateOutline() {
+        let dx = dotX - outlineX;
+        let dy = dotY - outlineY;
+        
+        outlineX += dx * 0.15;
+        outlineY += dy * 0.15;
+        
+        cursorOutline.style.transform = `translate(${outlineX}px, ${outlineY}px)`;
+        requestAnimationFrame(animateOutline);
+    }
+    animateOutline();
+
+    // Hover effects on interactive elements
+    const interactiveSelectors = 'a, button, .project-card, .skill-card, .cert-card, .social-link-item, input, textarea, select';
+    
+    document.addEventListener('mouseover', (e) => {
+        if (e.target.closest(interactiveSelectors)) {
+            cursorDot.classList.add('cursor-hover-active');
+            cursorOutline.classList.add('cursor-hover-active');
+        }
+    });
+
+    document.addEventListener('mouseout', (e) => {
+        if (e.target.closest(interactiveSelectors)) {
+            cursorDot.classList.remove('cursor-hover-active');
+            cursorOutline.classList.remove('cursor-hover-active');
+        }
+    });
+}
+
+function init3DCardTilt() {
+    // We bind it to body and delegate, or we bind to existing cards.
+    // Delegated event listener for cards to support dynamically rendered cards.
+    document.body.addEventListener('mousemove', (e) => {
+        const card = e.target.closest('.project-card, .skill-card, .cert-card, .edu-card');
+        if (!card) return;
+        
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left; // x position within the element.
+        const y = e.clientY - rect.top;  // y position within the element.
+        
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        
+        const rotateX = ((y - centerY) / centerY) * -8; // Max 8 degrees
+        const rotateY = ((x - centerX) / centerX) * 8;
+        
+        card.style.transform = `perspective(1000px) scale(1.02) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+        card.style.transition = 'none'; // remove transition during movement for smoothness
+        card.style.zIndex = '50';
+    });
+
+    document.body.addEventListener('mouseout', (e) => {
+        const card = e.target.closest('.project-card, .skill-card, .cert-card, .edu-card');
+        if (!card) return;
+        
+        // Ensure we are actually leaving the card, not just moving to a child element
+        const relatedTarget = e.relatedTarget;
+        if (relatedTarget && card.contains(relatedTarget)) return;
+
+        card.style.transform = '';
+        card.style.transition = 'all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1)';
+        card.style.zIndex = '';
+    });
+}

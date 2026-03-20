@@ -17,6 +17,18 @@
 </head>
 
 <body>
+    <!-- Preloader -->
+    <div id="preloader">
+        <div class="loader-content">
+            <span class="loader-logo">KKR</span>
+            <div class="loader-bar"></div>
+        </div>
+    </div>
+
+    <!-- Custom Cursor -->
+    <div class="cursor-dot" id="cursor-dot"></div>
+    <div class="cursor-outline" id="cursor-outline"></div>
+
     <!-- Fire Particles Background -->
     <canvas id="fire-particles"></canvas>
 
@@ -155,7 +167,8 @@
                         <input type="email" name="email" placeholder="Email" required>
                     </div>
                     <div class="form-group">
-                        <textarea name="message" placeholder="Tell me about your project..." rows="6" required></textarea>
+                        <textarea name="message" placeholder="Tell me about your project..." rows="6"
+                            required></textarea>
                     </div>
                     <button type="submit" class="btn-primary" style="width: 100%;">Send Message <span
                             class="arrow">↗</span></button>
@@ -184,6 +197,7 @@
                     <button class="tab-btn active" data-tab="tab-general">General</button>
                     <button class="tab-btn" data-tab="tab-skills">Skills</button>
                     <button class="tab-btn" data-tab="tab-projects">Projects</button>
+                    <button class="tab-btn" data-tab="tab-certifications">Certifications</button>
                     <button class="tab-btn" data-tab="tab-links">Links</button>
                 </div>
 
@@ -240,6 +254,12 @@
                     <button id="add-project-btn" class="btn-outline" style="margin-bottom: 1rem;">+ Add New
                         Project</button>
                     <div id="admin-projects-list" class="admin-list"></div>
+                </div>
+
+                <div class="tab-content" id="tab-certifications">
+                    <button id="add-cert-btn" class="btn-outline" style="margin-bottom: 1rem;">+ Add New
+                        Certification</button>
+                    <div id="admin-certs-list" class="admin-list"></div>
                 </div>
 
                 <div class="tab-content" id="tab-links">
