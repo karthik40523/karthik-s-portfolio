@@ -1,7 +1,7 @@
 // ==========================================
 // DEFAULT DATA STRUCTURE
 // ==========================================
-const DATA_VERSION = 8; // Increment to force localStorage reset
+const DATA_VERSION = 12; // Increment to force localStorage reset
 
 const defaultData = {
     version: DATA_VERSION,
@@ -54,12 +54,12 @@ const defaultData = {
         { degree: "10th Grade", institution: "Sri Chaitanya School, Ananthapur", period: "06/2019 – 03/2020", score: "Percentage: 100%" }
     ],
     certifications: [
-        { id: 1, name: "Foundations of Cybersecurity – Coursera", link: "https://drive.google.com/drive/folders/1H_O9zO90uwv6Lpw2AAJ3VIw1RNKnzBi0?usp=drive_link" },
-        { id: 2, name: "Ethical Hacker – Cisco", link: "https://drive.google.com/drive/folders/1H_O9zO90uwv6Lpw2AAJ3VIw1RNKnzBi0?usp=drive_link" },
-        { id: 3, name: "IBM Skills Network: SQL and Relational Databases 101", link: "https://drive.google.com/drive/folders/1H_O9zO90uwv6Lpw2AAJ3VIw1RNKnzBi0?usp=drive_link" },
-        { id: 4, name: "Cyber Threat Management – Cisco", link: "https://drive.google.com/drive/folders/1H_O9zO90uwv6Lpw2AAJ3VIw1RNKnzBi0?usp=drive_link" },
-        { id: 5, name: "Endpoint Security – Cisco", link: "https://drive.google.com/drive/folders/1H_O9zO90uwv6Lpw2AAJ3VIw1RNKnzBi0?usp=drive_link" },
-        { id: 6, name: "Introduction to Cybersecurity – Cisco", link: "https://drive.google.com/drive/folders/1H_O9zO90uwv6Lpw2AAJ3VIw1RNKnzBi0?usp=drive_link" }
+        { id: 1, name: "Foundations of Cybersecurity", organization: "Cisco", category: "Cisco", year: "2024", certificateLink: "https://drive.google.com/file/d/1RlHiExO-TFdcMiM7EpDM5kLPhAoPr3LY/view", previewLink: "https://drive.google.com/file/d/1RlHiExO-TFdcMiM7EpDM5kLPhAoPr3LY/preview" },
+        { id: 2, name: "SQL and Relational Databases 101", organization: "IBM Cognitive Class", category: "IBM", year: "2026", certificateLink: "https://drive.google.com/file/d/1QD5SFcAUUbGV-tEl0exrZOxOcL5jKhMx/view", previewLink: "https://drive.google.com/file/d/1QD5SFcAUUbGV-tEl0exrZOxOcL5jKhMx/preview" },
+        { id: 3, name: "Ethical Hacker", organization: "Cisco", category: "Cisco", year: "2024", certificateLink: "https://drive.google.com/file/d/1LHVimSFs72UgWmVY3Gn8LIPekksFeT9N/view", previewLink: "https://drive.google.com/file/d/1LHVimSFs72UgWmVY3Gn8LIPekksFeT9N/preview" },
+        { id: 4, name: "Cyber Threat Management", organization: "Cisco", category: "Cisco", year: "2024", certificateLink: "https://drive.google.com/file/d/1zbq1Qhto8IMHey8VPhv1m9H1CXCbbzCP/view", previewLink: "https://drive.google.com/file/d/1zbq1Qhto8IMHey8VPhv1m9H1CXCbbzCP/preview" },
+        { id: 5, name: "Endpoint Security", organization: "Cisco", category: "Cisco", year: "2024", certificateLink: "https://drive.google.com/file/d/1N6StHt8p8gnyYw-kakgqFA-rEkuxnxaB/view", previewLink: "https://drive.google.com/file/d/1N6StHt8p8gnyYw-kakgqFA-rEkuxnxaB/preview" },
+        { id: 6, name: "Introduction to Cybersecurity", organization: "Cisco", category: "Cisco", year: "2024", certificateLink: "https://drive.google.com/file/d/1kJH9k8G-TeYFHTm8nAqUod2qu5yPUlmP/view", previewLink: "https://drive.google.com/file/d/1kJH9k8G-TeYFHTm8nAqUod2qu5yPUlmP/preview" }
     ]
 };
 
@@ -191,37 +191,60 @@ function renderCertifications() {
     if (!container || !portfolioData.certifications) return;
     container.innerHTML = '';
 
-    portfolioData.certifications.forEach((cert, i) => {
-        const isString = typeof cert === 'string';
-        const name = isString ? cert : cert.name;
-        const link = isString ? '' : cert.link;
+    const orgIcons = {
+        'Cisco': 'fa-network-wired',
+        'IBM': 'fa-cube',
+        'IBM Cognitive Class': 'fa-cube',
+        'Coursera': 'fa-graduation-cap'
+    };
 
-        const div = document.createElement('div');
-        div.className = 'cert-card fade-in-up';
-        div.style.setProperty('--delay', `${i * 0.12}s`);
-        
-        let linkSection = '';
-        if (link && link !== "#" && link.trim() !== "") {
-            linkSection = `
-                <div class="cert-link-section">
-                    <a href="${link}" target="_blank" class="cert-link-btn">
-                        <i class="fa-solid fa-external-link-alt"></i>
-                        <span>View Certificate</span>
-                    </a>
-                </div>
-            `;
+    portfolioData.certifications.forEach((cert, i) => {
+        if (typeof cert === 'string') {
+            cert = { id: Date.now() + i, name: cert, organization: '', category: '', certificateLink: '', previewLink: '' };
+            portfolioData.certifications[i] = cert;
         }
 
+        const title = cert.name || cert.title || '';
+        const org = cert.organization || cert.issuer || '';
+        const year = cert.year || '';
+        const cat = cert.category || org;
+        const certUrl = cert.certificateLink || cert.link || '';
+        const prevUrl = cert.previewLink || certUrl;
+        const icon = orgIcons[org] || 'fa-award';
+
+        const div = document.createElement('div');
+        div.className = 'cert-gallery-card fade-in-up';
+        div.setAttribute('data-category', cat);
+        div.style.setProperty('--delay', `${i * 0.08}s`);
+
         div.innerHTML = `
-            <div class="cert-header">
-                <i class="fa-solid fa-award"></i>
-                <span class="cert-name">${name}</span>
+            <div class="cgc-top">
+                <div class="cgc-org-badge">
+                    <i class="fa-solid ${icon}"></i>
+                    <span>${org}</span>
+                </div>
+                <div class="cgc-glow"></div>
             </div>
-            ${linkSection}
+            <div class="cgc-body">
+                <h3 class="cgc-title">${title}</h3>
+                <div class="cgc-meta">
+                    <span class="cgc-org-name">${org}</span>
+                    ${year ? `<span class="cgc-year-badge"><i class="fa-regular fa-calendar"></i> ${year}</span>` : ''}
+                </div>
+            </div>
+            <div class="cgc-actions">
+                <button class="cgc-btn cgc-btn--preview" data-preview="${prevUrl}" data-title="${title}">
+                    <i class="fa-solid fa-eye"></i> Preview
+                </button>
+                <a href="${certUrl}" target="_blank" rel="noopener noreferrer" class="cgc-btn cgc-btn--view">
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i> View
+                </a>
+            </div>
         `;
         container.appendChild(div);
     });
 }
+
 
 function renderLinks() {
     const linkedin = document.getElementById('link-linkedin');
@@ -242,8 +265,162 @@ document.addEventListener('DOMContentLoaded', () => {
     initAdminDashboard();
     initFireParticles();
     initPreloader();
-    initCustomCursor();
+    initContactForm();
+    initCertGallery();
 });
+
+// ==========================================
+// CERTIFICATE GALLERY — FILTER + MODAL
+// ==========================================
+function initCertGallery() {
+    // --- Filter buttons ---
+    const filterBtns = document.querySelectorAll('.cert-filter-btn');
+    const container = document.getElementById('certifications-container');
+
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            filterBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            const filter = btn.getAttribute('data-filter');
+            const cards = container ? container.querySelectorAll('.cert-gallery-card') : [];
+
+            cards.forEach(card => {
+                const match = filter === 'all' || card.getAttribute('data-category') === filter;
+                card.style.display = match ? '' : 'none';
+                if (match) {
+                    // Re-trigger entrance animation
+                    card.classList.remove('visible');
+                    requestAnimationFrame(() => card.classList.add('visible'));
+                }
+            });
+        });
+    });
+
+    // --- Preview Modal ---
+    const modal = document.getElementById('cert-modal');
+    const modalClose = document.getElementById('cert-modal-close');
+    const modalTitle = document.getElementById('cert-modal-title');
+    const modalBody = document.getElementById('cert-modal-body');
+
+    if (!modal) return;
+
+    function openModal(title, previewUrl) {
+        modalTitle.textContent = title;
+        modalBody.innerHTML = `
+            <div class="cgc-preview-note">
+                <p><i class="fa-solid fa-circle-info"></i> Google Drive preview may require sign-in.</p>
+            </div>
+            <iframe
+                src="${previewUrl}"
+                title="${title} Certificate"
+                width="100%"
+                height="480"
+                style="border:none; border-radius: 8px;"
+                allowfullscreen
+                loading="lazy"
+            ></iframe>
+        `;
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+        modalBody.innerHTML = '';
+    }
+
+    // Delegated click on preview buttons
+    document.addEventListener('click', (e) => {
+        const btn = e.target.closest('.cgc-btn--preview');
+        if (btn) {
+            openModal(btn.getAttribute('data-title'), btn.getAttribute('data-preview'));
+        }
+    });
+
+    modalClose.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeModal();
+    });
+}
+
+// ==========================================
+// CONTACT FORM (JS-controlled, secure)
+// ==========================================
+function initContactForm() {
+    const form = document.getElementById('contact-form');
+    if (!form) return;
+
+    // API key stored in JS (not visible in HTML source)
+    const W3F_KEY = '87f18a6d-2cd9-4d63-8f64-a35cefade500';
+
+    const nameEl = document.getElementById('form-name');
+    const emailEl = document.getElementById('form-email');
+    const messageEl = document.getElementById('form-message');
+    const statusEl = document.getElementById('form-status');
+    const submitBtn = document.getElementById('form-submit-btn');
+
+    function showStatus(type, msg) {
+        statusEl.textContent = msg;
+        statusEl.className = `form-status form-status--${type}`;
+        statusEl.style.display = 'block';
+    }
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        // Honeypot check — bots fill the hidden checkbox
+        if (form.querySelector('[name="botcheck"]').checked) return;
+
+        // Field validation
+        const name = nameEl.value.trim();
+        const email = emailEl.value.trim();
+        const message = messageEl.value.trim();
+
+        if (!name) { showStatus('error', 'Please enter your name.'); nameEl.focus(); return; }
+        if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showStatus('error', 'Please enter a valid email address.'); emailEl.focus(); return; }
+        if (!message) { showStatus('error', 'Please enter a message.'); messageEl.focus(); return; }
+
+        // UI feedback while sending
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = 'Sending... <span class="arrow">⌛</span>';
+        statusEl.style.display = 'none';
+
+        try {
+            const payload = {
+                access_key: W3F_KEY,
+                name,
+                email,
+                message,
+                botcheck: false
+            };
+
+            const res = await fetch('https://api.web3forms.com/submit', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            const data = await res.json();
+
+            if (data.success) {
+                showStatus('success', '✅ Message sent successfully! I\'ll get back to you soon.');
+                form.reset();
+            } else {
+                showStatus('error', '❌ Something went wrong. Please try again.');
+            }
+        } catch (err) {
+            showStatus('error', '❌ Network error. Please check your connection and try again.');
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = 'Send Message <span class="arrow">↗</span>';
+        }
+    });
+}
 
 function initTheme() {
     const themeToggleBtn = document.getElementById('theme-toggle');
@@ -343,7 +520,9 @@ function initUIBehaviors() {
 
     animatedElements.forEach(el => scrollObserver.observe(el));
 
+    initCursorGlow();
     init3DCardTilt();
+    initParallax();
 
     // Hero blob parallax on mouse move
     const heroBlob1 = document.querySelector('.hero-blob-1');
@@ -461,7 +640,7 @@ function initAdminDashboard() {
     });
 
     // Add new certification
-    if(document.getElementById('add-cert-btn')) {
+    if (document.getElementById('add-cert-btn')) {
         document.getElementById('add-cert-btn').addEventListener('click', () => {
             const newId = Date.now();
             portfolioData.certifications.push({
@@ -480,25 +659,25 @@ function initFireParticles() {
     const canvas = document.getElementById('fire-particles');
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
-    
+
     let width, height;
     let particles = [];
-    
+
     function setSize() {
         width = window.innerWidth;
         height = window.innerHeight;
         canvas.width = width;
         canvas.height = height;
     }
-    
+
     setSize();
     window.addEventListener('resize', setSize);
-    
+
     class Particle {
         constructor() {
             this.reset();
         }
-        
+
         reset() {
             this.x = Math.random() * width;
             this.y = height + Math.random() * 100;
@@ -506,40 +685,40 @@ function initFireParticles() {
             this.speedY = Math.random() * 2 + 0.5;
             this.speedX = (Math.random() - 0.5) * 1.5;
             this.opacity = Math.random() * 0.8 + 0.2;
-            
+
             // Fire colors: Red, Orange, Gold
             const colors = ['#d9381e', '#e69c24', '#ff4d00', '#ffaa00'];
             this.color = colors[Math.floor(Math.random() * colors.length)];
         }
-        
+
         update() {
             this.y -= this.speedY;
             this.x += this.speedX;
-            
+
             // Wiggle effect
             this.x += Math.sin(this.y * 0.01) * 0.5;
-            
+
             // Fade out as it goes up
             this.opacity -= 0.003;
-            
+
             if (this.y < 0 || this.opacity <= 0) {
                 this.reset();
             }
         }
-        
+
         draw() {
             ctx.beginPath();
             ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
             ctx.fillStyle = this.color;
             ctx.globalAlpha = this.opacity;
             ctx.fill();
-            
+
             // Glow effect
             ctx.shadowBlur = 10;
             ctx.shadowColor = this.color;
         }
     }
-    
+
     function createParticles() {
         const particleCount = Math.floor(width / 15);
         for (let i = 0; i < particleCount; i++) {
@@ -547,23 +726,23 @@ function initFireParticles() {
             particles[i].y = Math.random() * height;
         }
     }
-    
+
     createParticles();
-    
+
     function animate() {
         ctx.clearRect(0, 0, width, height);
-        
+
         particles.forEach(p => {
             p.update();
             p.draw();
         });
-        
+
         ctx.globalAlpha = 1;
         ctx.shadowBlur = 0;
-        
+
         requestAnimationFrame(animate);
     }
-    
+
     animate();
 }
 
@@ -763,92 +942,84 @@ function initPreloader() {
     }
 }
 
-function initCustomCursor() {
-    const cursorDot = document.getElementById('cursor-dot');
-    const cursorOutline = document.getElementById('cursor-outline');
-    
-    if (!cursorDot || !cursorOutline) return;
-    
-    // Disable completely on touch devices
-    if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
-        cursorDot.style.display = 'none';
-        cursorOutline.style.display = 'none';
-        return;
-    }
+function initCursorGlow() {
+    const glow = document.getElementById('cursor-glow');
+    if (!glow) return;
 
-    let dotX = 0, dotY = 0;
-    let outlineX = 0, outlineY = 0;
+    // Performance optimization: lerp the position
+    let mouseX = 0, mouseY = 0;
+    let glowX = 0, glowY = 0;
 
     window.addEventListener('mousemove', (e) => {
-        dotX = e.clientX;
-        dotY = e.clientY;
-        
-        cursorDot.style.transform = `translate(${dotX}px, ${dotY}px)`;
+        mouseX = e.clientX;
+        mouseY = e.clientY;
     });
 
-    // Smooth animation for outline
-    function animateOutline() {
-        let dx = dotX - outlineX;
-        let dy = dotY - outlineY;
-        
-        outlineX += dx * 0.15;
-        outlineY += dy * 0.15;
-        
-        cursorOutline.style.transform = `translate(${outlineX}px, ${outlineY}px)`;
-        requestAnimationFrame(animateOutline);
+    function updateGlow() {
+        // Smooth lerping (0.1 for subtle lag / premium feel)
+        glowX += (mouseX - glowX) * 0.1;
+        glowY += (mouseY - glowY) * 0.1;
+
+        glow.style.left = `${glowX}px`;
+        glow.style.top = `${glowY}px`;
+
+        requestAnimationFrame(updateGlow);
     }
-    animateOutline();
+    updateGlow();
+}
 
-    // Hover effects on interactive elements
-    const interactiveSelectors = 'a, button, .project-card, .skill-card, .cert-card, .social-link-item, input, textarea, select';
-    
-    document.addEventListener('mouseover', (e) => {
-        if (e.target.closest(interactiveSelectors)) {
-            cursorDot.classList.add('cursor-hover-active');
-            cursorOutline.classList.add('cursor-hover-active');
-        }
-    });
+function initParallax() {
+    const bg = document.getElementById('parallax-bg');
+    const heroContent = document.querySelector('.hero-content');
 
-    document.addEventListener('mouseout', (e) => {
-        if (e.target.closest(interactiveSelectors)) {
-            cursorDot.classList.remove('cursor-hover-active');
-            cursorOutline.classList.remove('cursor-hover-active');
+    window.addEventListener('scroll', () => {
+        const scrolled = window.pageYOffset;
+
+        // Background moves slower
+        if (bg) bg.style.transform = `translateY(${scrolled * 0.15}px)`;
+
+        // Hero content moves slightly for depth
+        if (heroContent && scrolled < 800) {
+            heroContent.style.transform = `translateY(${scrolled * 0.3}px)`;
+            heroContent.style.opacity = 1 - (scrolled / 800);
         }
     });
 }
 
 function init3DCardTilt() {
-    // We bind it to body and delegate, or we bind to existing cards.
-    // Delegated event listener for cards to support dynamically rendered cards.
-    document.body.addEventListener('mousemove', (e) => {
-        const card = e.target.closest('.project-card, .skill-card, .cert-card, .edu-card');
+    // Media query to check if we should run tilt logic
+    const isMobile = window.innerWidth < 1024;
+    if (isMobile) return;
+
+    // Use event delegation for better performance and dynamic compatibility
+    document.addEventListener('mousemove', (e) => {
+        const card = e.target.closest('.project-card, .skill-card, .cert-gallery-card, .edu-card');
         if (!card) return;
-        
+
         const rect = card.getBoundingClientRect();
-        const x = e.clientX - rect.left; // x position within the element.
-        const y = e.clientY - rect.top;  // y position within the element.
-        
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
         const centerX = rect.width / 2;
         const centerY = rect.height / 2;
-        
-        const rotateX = ((y - centerY) / centerY) * -8; // Max 8 degrees
-        const rotateY = ((x - centerX) / centerX) * 8;
-        
-        card.style.transform = `perspective(1000px) scale(1.02) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-        card.style.transition = 'none'; // remove transition during movement for smoothness
-        card.style.zIndex = '50';
+
+        const rotateX = ((y - centerY) / centerY) * -10; // Slightly more tilt
+        const rotateY = ((x - centerX) / centerX) * 10;
+
+        card.style.transform = `perspective(1200px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.05)`;
+        card.style.transition = 'transform 0.1s ease-out';
+        card.style.boxShadow = '0 25px 50px -12px rgba(0, 0, 0, 0.5)';
+        card.style.zIndex = '10';
     });
 
-    document.body.addEventListener('mouseout', (e) => {
-        const card = e.target.closest('.project-card, .skill-card, .cert-card, .edu-card');
+    document.addEventListener('mouseout', (e) => {
+        const card = e.target.closest('.project-card, .skill-card, .cert-gallery-card, .edu-card');
         if (!card) return;
-        
-        // Ensure we are actually leaving the card, not just moving to a child element
-        const relatedTarget = e.relatedTarget;
-        if (relatedTarget && card.contains(relatedTarget)) return;
 
-        card.style.transform = '';
-        card.style.transition = 'all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1)';
+        // Reset with smooth transition
+        card.style.transform = 'perspective(1200px) rotateX(0deg) rotateY(0deg) scale(1)';
+        card.style.transition = 'all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1)';
+        card.style.boxShadow = '';
         card.style.zIndex = '';
     });
 }
