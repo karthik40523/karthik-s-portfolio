@@ -1,20 +1,31 @@
+/**
+ * ==========================================================================
+ * PORTFOLIO ARCHITECTURE CORE ENGINE (script.js)
+ * ==========================================================================
+ * Description: Orchestrates dynamic rendering, database synchronization via
+ * LocalStorage, admin dashboard customizer interfaces, credentials gallery filtering,
+ * interactive modal systems, scroll observers, and 3D geometric tilt mechanics.
+ * Redesigned to follow cinematic, premium luxury editorial design rules.
+ */
+
 // ==========================================
 // DEFAULT DATA STRUCTURE
 // ==========================================
-const DATA_VERSION = 12; // Increment to force localStorage reset
+// Increment to force client browser localStorage reset during updates
+const DATA_VERSION = 19; 
 
+// Initial schema blueprint served on first load or database reset
 const defaultData = {
     version: DATA_VERSION,
     general: {
-        logo: "KKR",
+        logo: "kkr_logo.png",
         tagline: "Software Developer | Full-Stack | AI",
         title: 'Building <span class="highlight">AI-Powered</span> Full-Stack Solutions',
         subtitle: "",
-        about1: "Software Developer with experience in building AI-powered full-stack applications using React, Flask, and PostgreSQL. Skilled in LLM integration, SQL query optimization, and cloud-based backend services.",
+        about1: "Software Developer with experience in building full-stack applications using React, Flask, and PostgreSQL. Skilled in LLM integration, SQL query optimization, and cloud-based backend services.",
         about2: "Passionate about developing scalable, secure, and data-driven systems. Whether it's crafting multi-LLM pipelines, building intelligent browser extensions, or designing robust backend architectures — I thrive on solving complex problems with elegant engineering.",
         contactText: "Have a project in mind or want to collaborate? Let's connect.",
-        footerText: "© 2026 G. Karthik Kumar Reddy. All Rights Reserved.",
-        theme: "dark"
+        footerText: "© 2026 G. Karthik Kumar Reddy. All Rights Reserved."
     },
     skills: [
         { id: 1, name: "React & Flask", category: "Full-Stack Development", icon: "fa-brands fa-react" },
@@ -39,22 +50,23 @@ const defaultData = {
             problem: "Users browsing the web are frequently exposed to phishing attacks through malicious URLs — traditional blacklist-based detection is too slow and misses new threats.",
             solution: "Built a real-time phishing detection system using a browser extension integrated with a Flask-based ML backend. Implemented a Random Forest classifier to analyze URL features and detect malicious websites with high accuracy. Enabled instant threat warnings with minimal data collection.",
             tools: ["JavaScript", "Python", "Flask", "Scikit-learn", "Browser Extension"],
-            link: "#"
+            link: "https://github.com/sujan7989/phishing-extension.git",
+            isExtension: true
         }
     ],
     links: {
         linkedin: "https://www.linkedin.com/in/karthik-kumar-a54743268/",
         github: "https://github.com/karthik40523",
         instagram: "https://instagram.com/karthik",
-        email: "karthikkumargonapati@gmail.com"
+        email: "karthikkumargonapati@gmail.com",
     },
     education: [
-        { degree: "B.Tech in Computer Science and Engineering", institution: "Kalasalingam University, Madurai", period: "08/2022 – 05/2026", score: "CGPA: 7.33 / 10.0" },
+        { degree: "B.Tech in Computer Science and Engineering", institution: "Kalasalingam University, Madurai", period: "08/2022 – 05/2026", score: "CGPA: 7.5/ 10.0" },
         { degree: "Intermediate (MPC)", institution: "Narayana Junior College, Nellore", period: "06/2020 – 03/2022", score: "Percentage: 88.5%" },
         { degree: "10th Grade", institution: "Sri Chaitanya School, Ananthapur", period: "06/2019 – 03/2020", score: "Percentage: 100%" }
     ],
     certifications: [
-        { id: 1, name: "Foundations of Cybersecurity", organization: "Cisco", category: "Cisco", year: "2024", certificateLink: "https://drive.google.com/file/d/1RlHiExO-TFdcMiM7EpDM5kLPhAoPr3LY/view", previewLink: "https://drive.google.com/file/d/1RlHiExO-TFdcMiM7EpDM5kLPhAoPr3LY/preview" },
+        { id: 1, name: "Foundations of Cybersecurity", organization: "Coursera", category: "Coursera", year: "2024", certificateLink: "https://drive.google.com/file/d/1RlHiExO-TFdcMiM7EpDM5kLPhAoPr3LY/view", previewLink: "https://drive.google.com/file/d/1RlHiExO-TFdcMiM7EpDM5kLPhAoPr3LY/preview" },
         { id: 2, name: "SQL and Relational Databases 101", organization: "IBM Cognitive Class", category: "IBM", year: "2026", certificateLink: "https://drive.google.com/file/d/1QD5SFcAUUbGV-tEl0exrZOxOcL5jKhMx/view", previewLink: "https://drive.google.com/file/d/1QD5SFcAUUbGV-tEl0exrZOxOcL5jKhMx/preview" },
         { id: 3, name: "Ethical Hacker", organization: "Cisco", category: "Cisco", year: "2024", certificateLink: "https://drive.google.com/file/d/1LHVimSFs72UgWmVY3Gn8LIPekksFeT9N/view", previewLink: "https://drive.google.com/file/d/1LHVimSFs72UgWmVY3Gn8LIPekksFeT9N/preview" },
         { id: 4, name: "Cyber Threat Management", organization: "Cisco", category: "Cisco", year: "2024", certificateLink: "https://drive.google.com/file/d/1zbq1Qhto8IMHey8VPhv1m9H1CXCbbzCP/view", previewLink: "https://drive.google.com/file/d/1zbq1Qhto8IMHey8VPhv1m9H1CXCbbzCP/preview" },
@@ -64,31 +76,31 @@ const defaultData = {
 };
 
 // ==========================================
-// DATA MANAGEMENT
+// DATA MANAGEMENT (LocalStorage Synchronization)
 // ==========================================
 let portfolioData = JSON.parse(localStorage.getItem('portfolioData'));
 
-// Force reset if data version is outdated or missing
+// Force data reset if version mismatch occurs or data is empty
 if (!portfolioData || portfolioData.version !== DATA_VERSION) {
     console.info("Data version mismatch or missing. Applying fresh data.");
     portfolioData = defaultData;
-    localStorage.removeItem('userThemePref');
     saveData();
 }
 
-// Ensure theme exists in older saves
-if (!portfolioData.general.theme) {
-    portfolioData.general.theme = "light";
-    saveData();
-}
-
+/**
+ * Saves current local state of portfolioData to client localStorage.
+ */
 function saveData() {
     localStorage.setItem('portfolioData', JSON.stringify(portfolioData));
 }
 
 // ==========================================
-// RENDER FUNCTIONS
+// RENDER FUNCTIONS (Dynamic DOM Population)
 // ==========================================
+
+/**
+ * Master render command. Synchronizes all UI components with the current local dataset.
+ */
 function renderAll() {
     renderGeneral();
     renderSkills();
@@ -98,8 +110,19 @@ function renderAll() {
     renderLinks();
 }
 
+/**
+ * Populates logo text, hero title layouts, about blocks, and copyrights.
+ */
 function renderGeneral() {
-    document.getElementById('site-logo').innerHTML = portfolioData.general.logo;
+    const logoVal = portfolioData.general.logo;
+    const logoEl = document.getElementById('site-logo');
+    if (logoEl) {
+        if (logoVal.includes('.') && (logoVal.endsWith('.png') || logoVal.endsWith('.jpg') || logoVal.endsWith('.jpeg') || logoVal.endsWith('.svg') || logoVal.endsWith('.gif'))) {
+            logoEl.innerHTML = `<img src="${logoVal}" alt="Logo" style="height: 36px; display: block; border-radius: 4px;">`;
+        } else {
+            logoEl.innerHTML = `${logoVal}<span>.</span>`;
+        }
+    }
     document.getElementById('hero-tagline').innerHTML = portfolioData.general.tagline;
     document.getElementById('hero-title').innerHTML = portfolioData.general.title;
 
@@ -119,8 +142,12 @@ function renderGeneral() {
     document.getElementById('footer-text').innerHTML = portfolioData.general.footerText;
 }
 
+/**
+ * Generates tech stack bento layout elements dynamically.
+ */
 function renderSkills() {
     const container = document.getElementById('skills-container');
+    if (!container) return;
     container.innerHTML = '';
 
     portfolioData.skills.forEach(skill => {
@@ -136,37 +163,197 @@ function renderSkills() {
     });
 }
 
+/**
+ * Generates project cards styled as clean preowned automotive listings.
+ */
 function renderProjects() {
     const container = document.getElementById('projects-container');
+    if (!container) return;
     container.innerHTML = '';
 
-    portfolioData.projects.forEach(project => {
-        const toolsHtml = project.tools.map(tool => `<span class="tool-tag">${tool}</span>`).join('');
+    // Synchronize cockpit telemetry stats in the hero panel dynamically
+    const statProjects = document.getElementById('stat-projects');
+    const statSkills = document.getElementById('stat-skills');
+    const statCerts = document.getElementById('stat-certs');
+    if (statProjects) statProjects.textContent = portfolioData.projects.length + '+';
+    if (statSkills) statSkills.textContent = portfolioData.skills.length + '+';
+    if (statCerts) statCerts.textContent = (portfolioData.certifications || []).length + '+';
+
+    portfolioData.projects.forEach((project, index) => {
+        // Build tool tags utilizing a stagger animation delay index
+        const toolsHtml = project.tools.map((tool, j) =>
+            `<span class="tool-tag" style="--delay:${0.3 + j * 0.07}s">${tool}</span>`
+        ).join('');
+
+        const isFeatured = index === 0;
+        const isExt = project.isExtension === true;
+        const linkHref = isExt ? 'javascript:void(0)' : project.link;
+        const linkIconAttr = isExt
+            ? `onclick="openProjectModal(${index})" title="View Extension Details"`
+            : `target="_blank" rel="noopener" title="Open Live Project"`;
+
+        // Render live system telemetry console logs for the featured project
+        const aiPreviewHtml = isFeatured ? `
+            <div class="ai-project-preview">
+                <div class="ai-step">
+                    <span class="ai-step-icon"><i class="fa-solid fa-file-pdf"></i></span>
+                    <span class="ai-step-text">PDF Syllabus Upload &amp; Parsing</span>
+                    <span class="ai-step-status">&#10003; Done</span>
+                </div>
+                <div class="ai-step">
+                    <span class="ai-step-icon"><i class="fa-solid fa-brain"></i></span>
+                    <span class="ai-step-text">Multi-LLM Pipeline (Gemini &rarr; Claude &rarr; Llama)</span>
+                    <span class="ai-step-status">&#10003; Done</span>
+                </div>
+                <div class="ai-step">
+                    <span class="ai-step-icon"><i class="fa-solid fa-database"></i></span>
+                    <span class="ai-step-text">PostgreSQL mark distribution &amp; JWT/RLS</span>
+                    <span class="ai-step-status">&#10003; Done</span>
+                </div>
+                <div class="ai-step">
+                    <span class="ai-step-icon"><i class="fa-solid fa-file-lines"></i></span>
+                    <span class="ai-step-text"><span class="ai-typing">Generating exam-ready question paper&hellip;</span></span>
+                    <span class="ai-step-status" style="color:var(--primary);">Live</span>
+                </div>
+            </div>` : '';
+
+        const badgeHtml = isFeatured
+            ? `<div class="project-badge"><i class="fa-solid fa-star"></i> Featured</div>` : '';
+
         const div = document.createElement('div');
-        div.className = 'project-card fade-in-up visible';
+        div.className = `project-card fade-in-up visible${isFeatured ? ' featured' : ''}`;
+        div.style.setProperty('--delay', `${index * 0.15}s`);
+
         div.innerHTML = `
+            ${badgeHtml}
             <div class="project-header">
                 <h3 class="project-title">${project.title}</h3>
-                <a href="${project.link}" target="_blank" class="project-link-icon">
-                    <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 1.2rem;"></i>
+                <a href="${linkHref}" ${linkIconAttr} class="project-link-icon" aria-label="Project Link">
+                    <i class="fa-solid fa-${isExt ? 'puzzle-piece' : 'arrow-up-right-from-square'}"></i>
                 </a>
             </div>
-            <div class="project-details" style="margin-bottom: 2rem; flex-grow: 1;">
-                <div class="project-problem" style="margin-bottom: 1rem;">
-                    <strong style="color: var(--text-main);">Problem:</strong> <span style="color: var(--text-muted);">${project.problem}</span>
+            ${aiPreviewHtml}
+            <div class="project-details">
+                <div class="project-problem">
+                    <strong>Problem:</strong>
+                    <span>${project.problem}</span>
                 </div>
                 <div class="project-solution">
-                    <strong style="color: var(--text-main);">Solution:</strong> <span style="color: var(--text-muted);">${project.solution}</span>
+                    <strong>Solution:</strong>
+                    <span>${project.solution}</span>
                 </div>
             </div>
             <div class="project-tools">
                 ${toolsHtml}
             </div>
         `;
+
+        // If project is a browser extension, configure modal open triggers
+        if (isExt) {
+            div.style.cursor = 'pointer';
+            div.addEventListener('click', (e) => {
+                if (!e.target.closest('.project-link-icon')) {
+                    openProjectModal(index);
+                }
+            });
+        }
+
         container.appendChild(div);
     });
 }
 
+/**
+ * Renders extension detail guides in a minimal dark-theme popup overlay.
+ * @param {number} projectIndex Index position of project in database
+ */
+function openProjectModal(projectIndex) {
+    const project = portfolioData.projects[projectIndex];
+    if (!project) return;
+
+    const modal = document.getElementById('project-modal');
+    const modalTitle = document.getElementById('project-modal-title');
+    const modalBody = document.getElementById('project-modal-body');
+    if (!modal) return;
+
+    // Map tech tools to minimal inline badge indicators
+    const toolsHtml = project.tools.map(t =>
+        `<span style="display:inline-flex;align-items:center;gap:4px;padding:4px 12px;background:var(--canvas);border:1px solid var(--hairline);border-radius:var(--rounded-full);font-size:0.78rem;font-weight:600;color:var(--primary);">${t}</span>`
+    ).join('');
+
+    const isExt = project.isExtension === true;
+
+    // Load installation guidelines for chrome unpacking
+    const linkSection = isExt ? `
+        <div style="background:var(--canvas);border:1px solid var(--hairline);padding:16px 20px;border-radius:var(--rounded-none);margin:16px 0;">
+            <p style="font-size:0.78rem;font-weight:800;color:var(--primary);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">
+                <i class="fa-brands fa-github"></i> GitHub Repository
+            </p>
+            <a href="${project.link}" target="_blank" rel="noopener"
+               style="color:var(--primary);font-weight:600;word-break:break-all;text-decoration:underline;font-size:0.9rem;">
+                ${project.link}
+            </a>
+        </div>
+        <div style="margin-top:24px;padding:16px 20px;border:1px solid var(--hairline);border-radius:var(--rounded-none);background:var(--canvas);">
+            <p style="font-size:0.85rem;font-weight:700;color:var(--ink);margin-bottom:12px;">
+                <i class="fa-solid fa-puzzle-piece" style="color:var(--primary)"></i> How to Load as Extension
+            </p>
+            <ol style="padding-left:20px;color:var(--body);font-size:0.88rem;line-height:2.1;">
+                <li>Clone/Download the repository from GitHub.</li>
+                <li>Open <code style="background:var(--canvas);color:var(--primary);padding:2px 6px;border-radius:var(--rounded-sm);">chrome://extensions</code> in your browser.</li>
+                <li>Enable <strong style="color:var(--ink)">Developer mode</strong> (top-right toggle).</li>
+                <li>Click <strong style="color:var(--ink)">Load unpacked</strong> and select the project folder.</li>
+            </ol>
+        </div>` : `
+        <div style="margin-top:16px;">
+            <a href="${project.link}" target="_blank" rel="noopener"
+               style="display:inline-flex;align-items:center;gap:8px;padding:12px 24px;background:var(--primary);color:var(--on-primary);border-radius:var(--rounded-none);font-weight:700;font-size:0.85rem;letter-spacing:1px;text-transform:uppercase;text-decoration:none;">
+                View Live Project
+            </a>
+        </div>`;
+
+    const extBadge = isExt ? `
+        <div class="cgc-preview-note" style="margin-bottom:16px;">
+            <p><i class="fa-solid fa-puzzle-piece"></i> Browser Extension — Cannot be previewed in-browser</p>
+        </div>` : '';
+
+    modalTitle.textContent = project.title;
+    modalBody.innerHTML = `
+        <div style="line-height:1.7;color:var(--ink);">
+            ${extBadge}
+            <div style="margin-bottom:20px;">
+                <p style="font-size:0.75rem;font-weight:800;color:var(--primary);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px;">Problem</p>
+                <p style="color:var(--body);font-size:0.95rem;">${project.problem}</p>
+            </div>
+            <div style="margin-bottom:24px;">
+                <p style="font-size:0.75rem;font-weight:800;color:var(--primary);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px;">Solution</p>
+                <p style="color:var(--body);font-size:0.95rem;">${project.solution}</p>
+            </div>
+            <div style="margin-bottom:24px;">
+                <p style="font-size:0.75rem;font-weight:800;color:var(--primary);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:12px;">Tech Stack</p>
+                <div style="display:flex;flex-wrap:wrap;gap:8px;">${toolsHtml}</div>
+            </div>
+            ${linkSection}
+        </div>
+    `;
+
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+/**
+ * Closes project info modal screen and restores body scrolling.
+ */
+function closeProjectModal() {
+    const modal = document.getElementById('project-modal');
+    if (modal) {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+}
+
+/**
+ * Renders education timelines as structural 3-column rows matching the race schedule layout.
+ */
 function renderEducation() {
     const container = document.getElementById('education-container');
     if (!container || !portfolioData.education) return;
@@ -178,19 +365,25 @@ function renderEducation() {
         div.style.setProperty('--delay', `${i * 0.15}s`);
         div.innerHTML = `
             <div class="edu-period">${edu.period}</div>
-            <h3 class="edu-degree">${edu.degree}</h3>
-            <p class="edu-institution">${edu.institution}</p>
+            <div>
+                <h3 class="edu-degree">${edu.degree}</h3>
+                <p class="edu-institution">${edu.institution}</p>
+            </div>
             <span class="edu-score">${edu.score}</span>
         `;
         container.appendChild(div);
     });
 }
 
+/**
+ * Populates certification credentials cards grid.
+ */
 function renderCertifications() {
     const container = document.getElementById('certifications-container');
     if (!container || !portfolioData.certifications) return;
     container.innerHTML = '';
 
+    // Assign appropriate vector icons matching certification organizations
     const orgIcons = {
         'Cisco': 'fa-network-wired',
         'IBM': 'fa-cube',
@@ -223,7 +416,6 @@ function renderCertifications() {
                     <i class="fa-solid ${icon}"></i>
                     <span>${org}</span>
                 </div>
-                <div class="cgc-glow"></div>
             </div>
             <div class="cgc-body">
                 <h3 class="cgc-title">${title}</h3>
@@ -234,10 +426,10 @@ function renderCertifications() {
             </div>
             <div class="cgc-actions">
                 <button class="cgc-btn cgc-btn--preview" data-preview="${prevUrl}" data-title="${title}">
-                    <i class="fa-solid fa-eye"></i> Preview
+                    Preview
                 </button>
                 <a href="${certUrl}" target="_blank" rel="noopener noreferrer" class="cgc-btn cgc-btn--view">
-                    <i class="fa-solid fa-arrow-up-right-from-square"></i> View
+                    View Link
                 </a>
             </div>
         `;
@@ -245,7 +437,9 @@ function renderCertifications() {
     });
 }
 
-
+/**
+ * Populates external social platform links in contact listings.
+ */
 function renderLinks() {
     const linkedin = document.getElementById('link-linkedin');
     const github = document.getElementById('link-github');
@@ -256,27 +450,30 @@ function renderLinks() {
 }
 
 // ==========================================
-// ADMIN DASHBOARD LOGIC
+// CORE APP HANDLER INITIALIZATIONS
 // ==========================================
 document.addEventListener('DOMContentLoaded', () => {
+    // Render dynamic datasets
     renderAll();
-    initTheme();
+
+    // Bind interaction engines and observer matrices
     initUIBehaviors();
     initAdminDashboard();
     initFireParticles();
     initPreloader();
     initContactForm();
     initCertGallery();
+    initProjectModal();
 });
 
 // ==========================================
-// CERTIFICATE GALLERY — FILTER + MODAL
+// CREDENTIALS GALLERY ENGINE
 // ==========================================
 function initCertGallery() {
-    // --- Filter buttons ---
     const filterBtns = document.querySelectorAll('.cert-filter-btn');
     const container = document.getElementById('certifications-container');
 
+    // Attach click filters to certification organization buttons
     filterBtns.forEach(btn => {
         btn.addEventListener('click', () => {
             filterBtns.forEach(b => b.classList.remove('active'));
@@ -289,7 +486,6 @@ function initCertGallery() {
                 const match = filter === 'all' || card.getAttribute('data-category') === filter;
                 card.style.display = match ? '' : 'none';
                 if (match) {
-                    // Re-trigger entrance animation
                     card.classList.remove('visible');
                     requestAnimationFrame(() => card.classList.add('visible'));
                 }
@@ -297,7 +493,7 @@ function initCertGallery() {
         });
     });
 
-    // --- Preview Modal ---
+    // Preview modal element bindings
     const modal = document.getElementById('cert-modal');
     const modalClose = document.getElementById('cert-modal-close');
     const modalTitle = document.getElementById('cert-modal-title');
@@ -305,6 +501,9 @@ function initCertGallery() {
 
     if (!modal) return;
 
+    /**
+     * Loads credential verification details in modal iframe viewer.
+     */
     function openModal(title, previewUrl) {
         modalTitle.textContent = title;
         modalBody.innerHTML = `
@@ -316,7 +515,7 @@ function initCertGallery() {
                 title="${title} Certificate"
                 width="100%"
                 height="480"
-                style="border:none; border-radius: 8px;"
+                style="border:none;"
                 allowfullscreen
                 loading="lazy"
             ></iframe>
@@ -331,7 +530,7 @@ function initCertGallery() {
         modalBody.innerHTML = '';
     }
 
-    // Delegated click on preview buttons
+    // Capture dynamic delegated clicks on credential preview triggers
     document.addEventListener('click', (e) => {
         const btn = e.target.closest('.cgc-btn--preview');
         if (btn) {
@@ -348,14 +547,29 @@ function initCertGallery() {
     });
 }
 
+function initProjectModal() {
+    const modal = document.getElementById('project-modal');
+    const modalClose = document.getElementById('project-modal-close');
+
+    if (!modal || !modalClose) return;
+
+    modalClose.addEventListener('click', closeProjectModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeProjectModal();
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeProjectModal();
+    });
+}
+
 // ==========================================
-// CONTACT FORM (JS-controlled, secure)
+// SECURE EMAIL DISPATCH (Web3Forms API)
 // ==========================================
 function initContactForm() {
     const form = document.getElementById('contact-form');
     if (!form) return;
 
-    // API key stored in JS (not visible in HTML source)
+    // Public API Key for Web3Forms transaction endpoints
     const W3F_KEY = '87f18a6d-2cd9-4d63-8f64-a35cefade500';
 
     const nameEl = document.getElementById('form-name');
@@ -364,6 +578,9 @@ function initContactForm() {
     const statusEl = document.getElementById('form-status');
     const submitBtn = document.getElementById('form-submit-btn');
 
+    /**
+     * Controls styling of status banners.
+     */
     function showStatus(type, msg) {
         statusEl.textContent = msg;
         statusEl.className = `form-status form-status--${type}`;
@@ -373,10 +590,10 @@ function initContactForm() {
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
-        // Honeypot check — bots fill the hidden checkbox
+        // Honeypot spam defense trigger
         if (form.querySelector('[name="botcheck"]').checked) return;
 
-        // Field validation
+        // Perform static text validations
         const name = nameEl.value.trim();
         const email = emailEl.value.trim();
         const message = messageEl.value.trim();
@@ -385,9 +602,9 @@ function initContactForm() {
         if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showStatus('error', 'Please enter a valid email address.'); emailEl.focus(); return; }
         if (!message) { showStatus('error', 'Please enter a message.'); messageEl.focus(); return; }
 
-        // UI feedback while sending
+        // Block form adjustments during transaction processes
         submitBtn.disabled = true;
-        submitBtn.innerHTML = 'Sending... <span class="arrow">⌛</span>';
+        submitBtn.innerHTML = 'Sending...';
         statusEl.style.display = 'none';
 
         try {
@@ -408,60 +625,25 @@ function initContactForm() {
             const data = await res.json();
 
             if (data.success) {
-                showStatus('success', '✅ Message sent successfully! I\'ll get back to you soon.');
+                showStatus('success', 'Message sent successfully! I\'ll get back to you soon.');
                 form.reset();
             } else {
-                showStatus('error', '❌ Something went wrong. Please try again.');
+                showStatus('error', 'Something went wrong. Please try again.');
             }
         } catch (err) {
-            showStatus('error', '❌ Network error. Please check your connection and try again.');
+            showStatus('error', 'Network error. Please check your connection and try again.');
         } finally {
             submitBtn.disabled = false;
-            submitBtn.innerHTML = 'Send Message <span class="arrow">↗</span>';
+            submitBtn.innerHTML = 'Send Message';
         }
     });
 }
 
-function initTheme() {
-    const themeToggleBtn = document.getElementById('theme-toggle');
-    const iconSun = document.getElementById('theme-icon-sun');
-    const iconMoon = document.getElementById('theme-icon-moon');
-
-    function applyTheme(isDark) {
-        if (isDark) {
-            document.body.classList.add('dark-theme');
-            document.body.classList.remove('light-theme');
-            if (iconSun) iconSun.style.display = 'block';
-            if (iconMoon) iconMoon.style.display = 'none';
-        } else {
-            document.body.classList.remove('dark-theme');
-            document.body.classList.remove('light-theme');
-            if (iconSun) iconSun.style.display = 'none';
-            if (iconMoon) iconMoon.style.display = 'block';
-        }
-    }
-
-    const userThemePref = localStorage.getItem('userThemePref');
-    let isDarkTheme = false;
-
-    if (userThemePref !== null) {
-        isDarkTheme = userThemePref === 'dark';
-    } else {
-        isDarkTheme = portfolioData.general.theme === 'dark';
-    }
-    applyTheme(isDarkTheme);
-
-    if (themeToggleBtn) {
-        themeToggleBtn.addEventListener('click', () => {
-            isDarkTheme = !document.body.classList.contains('dark-theme');
-            localStorage.setItem('userThemePref', isDarkTheme ? 'dark' : 'light');
-            applyTheme(isDarkTheme);
-        });
-    }
-}
-
+// ==========================================
+// INTERACTIVE TRANSITIONS & UTILITIES
+// ==========================================
 function initUIBehaviors() {
-    // Smooth scrolling
+    // Dynamic anchors scrolling
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             e.preventDefault();
@@ -474,35 +656,17 @@ function initUIBehaviors() {
         });
     });
 
-    // Navbar scroll effect
+    // Toggle navbar dark border on window scrolling thresholds
     const navbar = document.querySelector('.navbar');
     window.addEventListener('scroll', () => {
         if (window.scrollY > 60) {
-            navbar.classList.add('navbar-scrolled');
+            navbar.style.borderBottomColor = 'var(--ink)';
         } else {
-            navbar.classList.remove('navbar-scrolled');
+            navbar.style.borderBottomColor = 'var(--hairline)';
         }
     });
 
-    // Stagger delays for children
-    document.querySelectorAll('.skill-card').forEach((card, i) => {
-        card.classList.add('fade-in-up');
-        card.style.setProperty('--delay', `${i * 0.1}s`);
-    });
-
-    document.querySelectorAll('.project-card').forEach((card, i) => {
-        card.classList.add('fade-in-up');
-        card.style.setProperty('--delay', `${i * 0.15}s`);
-        card.querySelectorAll('.tool-tag').forEach((tag, j) => {
-            tag.style.setProperty('--delay', `${0.3 + j * 0.08}s`);
-        });
-    });
-
-    document.querySelectorAll('.social-link-item').forEach((item, i) => {
-        item.style.setProperty('--delay', `${0.2 + i * 0.12}s`);
-    });
-
-    // Intersection Observer for all animated elements
+    // Stagger observers elements targets
     const animSelectors = '.fade-in-up, .slide-in-left, .slide-in-right, .scale-in, .footer';
     const animatedElements = document.querySelectorAll(animSelectors);
 
@@ -520,37 +684,85 @@ function initUIBehaviors() {
 
     animatedElements.forEach(el => scrollObserver.observe(el));
 
-    initCursorGlow();
     init3DCardTilt();
     initParallax();
+}
 
-    // Hero blob parallax on mouse move
-    const heroBlob1 = document.querySelector('.hero-blob-1');
-    const heroBlob2 = document.querySelector('.hero-blob-2');
-    const hero = document.querySelector('.hero');
-    if (hero && heroBlob1) {
-        hero.addEventListener('mousemove', (e) => {
-            const rect = hero.getBoundingClientRect();
-            const x = (e.clientX - rect.left) / rect.width - 0.5;
-            const y = (e.clientY - rect.top) / rect.height - 0.5;
-            heroBlob1.style.transform = `translate(${x * 40}px, ${y * 30}px)`;
-            if (heroBlob2) heroBlob2.style.transform = `translate(${-x * 30}px, ${-y * 20}px)`;
-        });
-        hero.addEventListener('mouseleave', () => {
-            heroBlob1.style.transform = '';
-            heroBlob1.style.transition = 'transform 0.6s ease-out';
-            if (heroBlob2) {
-                heroBlob2.style.transform = '';
-                heroBlob2.style.transition = 'transform 0.6s ease-out';
-            }
+/**
+ * Particle background logic. Disabled in current build per luxury editorial rules.
+ */
+function initFireParticles() {
+    const canvas = document.getElementById('fire-particles');
+    if (!canvas) return; // Exit immediately to save process execution cycles
+}
+
+/**
+ * Removes preloader element once page load operations complete.
+ */
+function initPreloader() {
+    const preloader = document.getElementById('preloader');
+    if (preloader) {
+        window.addEventListener('load', () => {
             setTimeout(() => {
-                heroBlob1.style.transition = '';
-                if (heroBlob2) heroBlob2.style.transition = '';
-            }, 600);
+                preloader.style.opacity = '0';
+                preloader.style.visibility = 'hidden';
+                preloader.style.transition = 'opacity 0.6s ease-out, visibility 0.6s ease-out';
+                setTimeout(() => {
+                    preloader.remove();
+                }, 600);
+            }, 500);
         });
     }
 }
 
+/**
+ * Updates vertical position matrix parameters on scroll calculations.
+ */
+function initParallax() {
+    // Parallax disabled as hero text content is now positioned in the flow below the video viewport.
+}
+
+/**
+ * Triggers interactive geometric tilts on desktop grids based on mouse movement coordinates.
+ */
+function init3DCardTilt() {
+    const isMobile = window.innerWidth < 1024;
+    if (isMobile) return;
+
+    document.addEventListener('mousemove', (e) => {
+        const card = e.target.closest('.project-card, .skill-card, .cert-gallery-card, .edu-card');
+        if (!card) return;
+
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+
+        const rotateX = ((y - centerY) / centerY) * -6;
+        const rotateY = ((x - centerX) / centerX) * 6;
+
+        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-4px)`;
+        card.style.transition = 'transform 0.05s ease-out';
+        card.style.boxShadow = 'var(--shadow-hover)';
+        card.style.zIndex = '10';
+    });
+
+    document.addEventListener('mouseout', (e) => {
+        const card = e.target.closest('.project-card, .skill-card, .cert-gallery-card, .edu-card');
+        if (!card) return;
+
+        card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0)';
+        card.style.transition = 'all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1)';
+        card.style.boxShadow = '';
+        card.style.zIndex = '';
+    });
+}
+
+// ==========================================
+// ADMIN DASHBOARD CORE CONTROLLERS
+// ==========================================
 function initAdminDashboard() {
     const modal = document.getElementById('admin-modal');
     const openBtn = document.getElementById('open-dashboard-btn');
@@ -563,12 +775,13 @@ function initAdminDashboard() {
         });
     }
 
+    if (closeBtn) {
+        closeBtn.addEventListener('click', () => {
+            modal.classList.remove('active');
+        });
+    }
 
-    closeBtn.addEventListener('click', () => {
-        modal.classList.remove('active');
-    });
-
-    // Tab Switching
+    // Dashboard tab-routing triggers
     const tabs = document.querySelectorAll('.tab-btn');
     const contents = document.querySelectorAll('.tab-content');
 
@@ -581,71 +794,83 @@ function initAdminDashboard() {
         });
     });
 
-    // Save General Settings
-    document.querySelector('.save-general-btn').addEventListener('click', () => {
-        portfolioData.general.theme = document.getElementById('input-theme').value;
-        portfolioData.general.logo = document.getElementById('input-logo').value;
-        portfolioData.general.tagline = document.getElementById('input-tagline').value;
-        portfolioData.general.title = document.getElementById('input-title').value;
+    // Bind General Settings Save buttons
+    const saveGenBtn = document.querySelector('.save-general-btn');
+    if (saveGenBtn) {
+        saveGenBtn.addEventListener('click', () => {
+            portfolioData.general.logo = document.getElementById('input-logo').value;
+            portfolioData.general.tagline = document.getElementById('input-tagline').value;
+            portfolioData.general.title = document.getElementById('input-title').value;
 
-        const inputSubtitleEl = document.getElementById('input-subtitle');
-        portfolioData.general.subtitle = inputSubtitleEl ? inputSubtitleEl.value : '';
+            const inputSubtitleEl = document.getElementById('input-subtitle');
+            portfolioData.general.subtitle = inputSubtitleEl ? inputSubtitleEl.value : '';
 
-        portfolioData.general.about1 = document.getElementById('input-about1').value;
-        portfolioData.general.about2 = document.getElementById('input-about2').value;
-        portfolioData.general.contactText = document.getElementById('input-contact-text').value;
-        portfolioData.general.footerText = document.getElementById('input-footer').value;
+            portfolioData.general.about1 = document.getElementById('input-about1').value;
+            portfolioData.general.about2 = document.getElementById('input-about2').value;
+            portfolioData.general.contactText = document.getElementById('input-contact-text').value;
+            portfolioData.general.footerText = document.getElementById('input-footer').value;
 
-        saveData();
-        renderGeneral();
-        alert('General settings saved!');
-    });
-
-    // Save Links
-    document.querySelector('.save-links-btn').addEventListener('click', () => {
-        portfolioData.links.linkedin = document.getElementById('input-link-linkedin').value;
-        portfolioData.links.github = document.getElementById('input-link-github').value;
-        const igEl = document.getElementById('input-link-instagram');
-        if (igEl) portfolioData.links.instagram = igEl.value;
-        portfolioData.links.email = document.getElementById('input-link-email').value;
-
-        saveData();
-        renderLinks();
-        alert('Links saved!');
-    });
-
-    // Add new skill
-    document.getElementById('add-skill-btn').addEventListener('click', () => {
-        const newId = Date.now();
-        portfolioData.skills.push({ id: newId, name: "New Skill", category: "Category", icon: "fa-solid fa-code" });
-        saveData();
-        renderAdminSkills();
-        renderSkills();
-    });
-
-    // Add new project
-    document.getElementById('add-project-btn').addEventListener('click', () => {
-        const newId = Date.now();
-        portfolioData.projects.push({
-            id: newId,
-            title: "New Project",
-            problem: "Description of the problem...",
-            solution: "Description of the solution...",
-            tools: ["Tool 1", "Tool 2"],
-            link: "#"
+            saveData();
+            renderGeneral();
+            alert('General settings saved!');
         });
-        saveData();
-        renderAdminProjects();
-        renderProjects();
-    });
+    }
 
-    // Add new certification
-    if (document.getElementById('add-cert-btn')) {
-        document.getElementById('add-cert-btn').addEventListener('click', () => {
+    // Bind Social Links Save buttons
+    const saveLinksBtn = document.querySelector('.save-links-btn');
+    if (saveLinksBtn) {
+        saveLinksBtn.addEventListener('click', () => {
+            portfolioData.links.linkedin = document.getElementById('input-link-linkedin').value;
+            portfolioData.links.github = document.getElementById('input-link-github').value;
+            const igEl = document.getElementById('input-link-instagram');
+            if (igEl) portfolioData.links.instagram = igEl.value;
+            portfolioData.links.email = document.getElementById('input-link-email').value;
+
+            saveData();
+            renderLinks();
+            alert('Links saved!');
+        });
+    }
+
+    // Configure new item addition triggers
+    const addSkillBtn = document.getElementById('add-skill-btn');
+    if (addSkillBtn) {
+        addSkillBtn.addEventListener('click', () => {
+            const newId = Date.now();
+            portfolioData.skills.push({ id: newId, name: "New Skill", category: "Category", icon: "fa-solid fa-code" });
+            saveData();
+            renderAdminSkills();
+            renderSkills();
+        });
+    }
+
+    const addProjBtn = document.getElementById('add-project-btn');
+    if (addProjBtn) {
+        addProjBtn.addEventListener('click', () => {
+            const newId = Date.now();
+            portfolioData.projects.push({
+                id: newId,
+                title: "New Project",
+                problem: "Description of the problem...",
+                solution: "Description of the solution...",
+                tools: ["Tool 1", "Tool 2"],
+                link: "#"
+            });
+            saveData();
+            renderAdminProjects();
+            renderProjects();
+        });
+    }
+
+    const addCertBtn = document.getElementById('add-cert-btn');
+    if (addCertBtn) {
+        addCertBtn.addEventListener('click', () => {
             const newId = Date.now();
             portfolioData.certifications.push({
                 id: newId,
                 name: "New Certification",
+                organization: "Organization",
+                year: "2026",
                 link: ""
             });
             saveData();
@@ -655,114 +880,22 @@ function initAdminDashboard() {
     }
 }
 
-function initFireParticles() {
-    const canvas = document.getElementById('fire-particles');
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-
-    let width, height;
-    let particles = [];
-
-    function setSize() {
-        width = window.innerWidth;
-        height = window.innerHeight;
-        canvas.width = width;
-        canvas.height = height;
-    }
-
-    setSize();
-    window.addEventListener('resize', setSize);
-
-    class Particle {
-        constructor() {
-            this.reset();
-        }
-
-        reset() {
-            this.x = Math.random() * width;
-            this.y = height + Math.random() * 100;
-            this.size = Math.random() * 3 + 1;
-            this.speedY = Math.random() * 2 + 0.5;
-            this.speedX = (Math.random() - 0.5) * 1.5;
-            this.opacity = Math.random() * 0.8 + 0.2;
-
-            // Fire colors: Red, Orange, Gold
-            const colors = ['#d9381e', '#e69c24', '#ff4d00', '#ffaa00'];
-            this.color = colors[Math.floor(Math.random() * colors.length)];
-        }
-
-        update() {
-            this.y -= this.speedY;
-            this.x += this.speedX;
-
-            // Wiggle effect
-            this.x += Math.sin(this.y * 0.01) * 0.5;
-
-            // Fade out as it goes up
-            this.opacity -= 0.003;
-
-            if (this.y < 0 || this.opacity <= 0) {
-                this.reset();
-            }
-        }
-
-        draw() {
-            ctx.beginPath();
-            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-            ctx.fillStyle = this.color;
-            ctx.globalAlpha = this.opacity;
-            ctx.fill();
-
-            // Glow effect
-            ctx.shadowBlur = 10;
-            ctx.shadowColor = this.color;
-        }
-    }
-
-    function createParticles() {
-        const particleCount = Math.floor(width / 15);
-        for (let i = 0; i < particleCount; i++) {
-            particles.push(new Particle());
-            particles[i].y = Math.random() * height;
-        }
-    }
-
-    createParticles();
-
-    function animate() {
-        ctx.clearRect(0, 0, width, height);
-
-        particles.forEach(p => {
-            p.update();
-            p.draw();
-        });
-
-        ctx.globalAlpha = 1;
-        ctx.shadowBlur = 0;
-
-        requestAnimationFrame(animate);
-    }
-
-    animate();
-}
-
+/**
+ * Loads values from database into configuration input elements.
+ */
 function populateAdminForms() {
-    const inputThemeEl = document.getElementById('input-theme');
-    if (inputThemeEl) inputThemeEl.value = portfolioData.general.theme || 'light';
-
     document.getElementById('input-logo').value = portfolioData.general.logo;
     document.getElementById('input-tagline').value = portfolioData.general.tagline;
     document.getElementById('input-title').value = portfolioData.general.title;
 
     const inputSubtitleEl = document.getElementById('input-subtitle');
-    if (inputSubtitleEl) inputSubtitleEl.value = portfolioData.general.subtitle;
+    if (inputSubtitleEl) inputSubtitleEl.value = portfolioData.general.subtitle || '';
 
     document.getElementById('input-about1').value = portfolioData.general.about1;
     document.getElementById('input-about2').value = portfolioData.general.about2;
     document.getElementById('input-contact-text').value = portfolioData.general.contactText;
     document.getElementById('input-footer').value = portfolioData.general.footerText;
 
-    // Populate Links
     document.getElementById('input-link-linkedin').value = portfolioData.links.linkedin;
     document.getElementById('input-link-github').value = portfolioData.links.github;
     const igEl = document.getElementById('input-link-instagram');
@@ -774,8 +907,12 @@ function populateAdminForms() {
     renderAdminCertifications();
 }
 
+/**
+ * Renders items dynamically inside the Admin Skills configuration manager.
+ */
 function renderAdminSkills() {
     const list = document.getElementById('admin-skills-list');
+    if (!list) return;
     list.innerHTML = '';
 
     portfolioData.skills.forEach((skill) => {
@@ -800,8 +937,12 @@ function renderAdminSkills() {
     });
 }
 
+/**
+ * Renders items dynamically inside the Admin Projects configuration manager.
+ */
 function renderAdminProjects() {
     const list = document.getElementById('admin-projects-list');
+    if (!list) return;
     list.innerHTML = '';
 
     portfolioData.projects.forEach((proj) => {
@@ -835,21 +976,23 @@ function renderAdminProjects() {
     });
 }
 
+/**
+ * Renders items dynamically inside the Admin Credentials configuration manager.
+ */
 function renderAdminCertifications() {
     const list = document.getElementById('admin-certs-list');
     if (!list) return;
     list.innerHTML = '';
 
     portfolioData.certifications.forEach((cert, i) => {
-        // Ensure object structure for backwards compatibility
         if (typeof cert === 'string') {
-            cert = { id: Date.now() + i, name: cert, link: "" };
+            cert = { id: Date.now() + i, name: cert, organization: '', category: '', certificateLink: '', previewLink: '' };
             portfolioData.certifications[i] = cert;
         }
 
         const div = document.createElement('div');
         div.className = 'admin-list-item';
-        const linkPreview = cert.link && cert.link.trim() !== "" ? `<a href="${cert.link}" target="_blank" style="color: #6366f1; font-size: 0.9rem;"><i class="fa-solid fa-link"></i> Link Preview</a>` : '<span style="color: #999; font-size: 0.9rem;">No link added yet</span>';
+        const linkPreview = cert.certificateLink && cert.certificateLink.trim() !== "" ? `<a href="${cert.certificateLink}" target="_blank" style="color:var(--primary); font-size: 0.9rem;"><i class="fa-solid fa-link"></i> Link Preview</a>` : '<span style="color: #999; font-size: 0.9rem;">No link added yet</span>';
         div.innerHTML = `
             <button class="delete-item-btn" onclick="deleteCert(${cert.id})">Delete</button>
             <div class="admin-group">
@@ -858,7 +1001,7 @@ function renderAdminCertifications() {
             </div>
             <div class="admin-group">
                 <label><i class="fa-solid fa-link"></i> Certificate Link</label>
-                <input type="url" value="${cert.link || ''}" onchange="updateCert(${cert.id}, 'link', this.value)" placeholder="https://example.com/certificate">
+                <input type="url" value="${cert.certificateLink || ''}" onchange="updateCert(${cert.id}, 'certificateLink', this.value)" placeholder="https://example.com/certificate">
                 <small style="color: #999; margin-top: 0.5rem; display: block;">Add the URL to view/verify your certificate. ${linkPreview}</small>
             </div>
         `;
@@ -866,7 +1009,7 @@ function renderAdminCertifications() {
     });
 }
 
-// Admin API Functions (Global scope for inline onclick)
+// Global hook triggers for Admin actions (required for inline onchange callbacks)
 window.updateSkill = function (id, field, value) {
     const skill = portfolioData.skills.find(s => s.id === id);
     if (skill) skill[field] = value;
@@ -921,105 +1064,3 @@ window.deleteCert = function (id) {
         renderCertifications();
     }
 };
-
-// ==========================================
-// ADVANCED UI / UX FEATURES
-// ==========================================
-
-function initPreloader() {
-    const preloader = document.getElementById('preloader');
-    if (preloader) {
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                preloader.style.opacity = '0';
-                preloader.style.visibility = 'hidden';
-                preloader.style.transition = 'opacity 0.6s ease-out, visibility 0.6s ease-out';
-                setTimeout(() => {
-                    preloader.remove();
-                }, 600);
-            }, 500); // 500ms min delay for aesthetic purposes
-        });
-    }
-}
-
-function initCursorGlow() {
-    const glow = document.getElementById('cursor-glow');
-    if (!glow) return;
-
-    // Performance optimization: lerp the position
-    let mouseX = 0, mouseY = 0;
-    let glowX = 0, glowY = 0;
-
-    window.addEventListener('mousemove', (e) => {
-        mouseX = e.clientX;
-        mouseY = e.clientY;
-    });
-
-    function updateGlow() {
-        // Smooth lerping (0.1 for subtle lag / premium feel)
-        glowX += (mouseX - glowX) * 0.1;
-        glowY += (mouseY - glowY) * 0.1;
-
-        glow.style.left = `${glowX}px`;
-        glow.style.top = `${glowY}px`;
-
-        requestAnimationFrame(updateGlow);
-    }
-    updateGlow();
-}
-
-function initParallax() {
-    const bg = document.getElementById('parallax-bg');
-    const heroContent = document.querySelector('.hero-content');
-
-    window.addEventListener('scroll', () => {
-        const scrolled = window.pageYOffset;
-
-        // Background moves slower
-        if (bg) bg.style.transform = `translateY(${scrolled * 0.15}px)`;
-
-        // Hero content moves slightly for depth
-        if (heroContent && scrolled < 800) {
-            heroContent.style.transform = `translateY(${scrolled * 0.3}px)`;
-            heroContent.style.opacity = 1 - (scrolled / 800);
-        }
-    });
-}
-
-function init3DCardTilt() {
-    // Media query to check if we should run tilt logic
-    const isMobile = window.innerWidth < 1024;
-    if (isMobile) return;
-
-    // Use event delegation for better performance and dynamic compatibility
-    document.addEventListener('mousemove', (e) => {
-        const card = e.target.closest('.project-card, .skill-card, .cert-gallery-card, .edu-card');
-        if (!card) return;
-
-        const rect = card.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-
-        const centerX = rect.width / 2;
-        const centerY = rect.height / 2;
-
-        const rotateX = ((y - centerY) / centerY) * -10; // Slightly more tilt
-        const rotateY = ((x - centerX) / centerX) * 10;
-
-        card.style.transform = `perspective(1200px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.05)`;
-        card.style.transition = 'transform 0.1s ease-out';
-        card.style.boxShadow = '0 25px 50px -12px rgba(0, 0, 0, 0.5)';
-        card.style.zIndex = '10';
-    });
-
-    document.addEventListener('mouseout', (e) => {
-        const card = e.target.closest('.project-card, .skill-card, .cert-gallery-card, .edu-card');
-        if (!card) return;
-
-        // Reset with smooth transition
-        card.style.transform = 'perspective(1200px) rotateX(0deg) rotateY(0deg) scale(1)';
-        card.style.transition = 'all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1)';
-        card.style.boxShadow = '';
-        card.style.zIndex = '';
-    });
-}

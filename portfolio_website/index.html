@@ -2,142 +2,186 @@
 <html lang="en">
 
 <head>
+    <!-- ==========================================
+         METADATA & EXTERNAL RESOURCES
+         ========================================== -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Karthik Kumar Reddy | Software Developer</title>
+    
+    <!-- SEO Meta Description: Summarizing developer specialization for indexing -->
     <meta name="description"
-        content="Portfolio of G. Karthik Kumar Reddy — Software Developer specializing in AI-powered full-stack applications.">
+        content="Portfolio of G. Karthik Kumar Reddy — Software Developer specializing in AI-powered full-stack applications. Redesigned to follow cinematic, premium luxury editorial guidelines.">
+    
+    <!-- Stylesheet: Core design tokens, typography scales, layout matrices -->
     <link rel="stylesheet" href="styles.css">
+    
+    <!-- External Font Preconnects: Optimizes typographic layout rendering speed -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap"
-        rel="stylesheet">
+    
+    <!-- FontAwesome: Vector icons for navbar, tech stack, and social listings -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 
 <body class="dark-theme">
-    <!-- Cursor Glow Tracking -->
-    <div id="cursor-glow" class="cursor-glow"></div>
-
-    <!-- Parallax Background Layer -->
-    <div class="parallax-bg" id="parallax-bg"></div>
-    <!-- Preloader -->
+    <!-- ==========================================
+         PRELOADER: Clean editorial loading screen
+         ========================================== -->
     <div id="preloader">
         <div class="loader-content">
-            <span class="loader-logo">KKR</span>
+            <span class="loader-logo">KKR<span>.</span></span>
             <div class="loader-bar"></div>
         </div>
     </div>
 
-    <!-- Fire Particles Background -->
-    <canvas id="fire-particles"></canvas>
-
-    <!-- Navbar -->
+    <!-- ==========================================
+         NAVBAR: Fixed top 64px header panel
+         ========================================== -->
     <nav class="navbar">
-        <div class="logo" id="site-logo">KKR</div>
+        <!-- Logo: Site identity using editorial signature red dot -->
+        <div class="logo" id="site-logo">KKR<span>.</span></div>
+        
+        <!-- Navigation Links: Menu hierarchy and administration toggles -->
         <ul class="nav-links">
             <li><a href="#about">About</a></li>
             <li><a href="#education">Education</a></li>
             <li><a href="#skills">Skills</a></li>
             <li><a href="#projects">Projects</a></li>
-            <li>
-                <button id="theme-toggle" class="theme-btn" aria-label="Toggle Theme">
-                    <svg id="theme-icon-sun" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                        stroke-linejoin="round">
-                        <circle cx="12" cy="12" r="5"></circle>
-                        <line x1="12" y1="1" x2="12" y2="3"></line>
-                        <line x1="12" y1="21" x2="12" y2="23"></line>
-                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-                        <line x1="1" y1="12" x2="3" y2="12"></line>
-                        <line x1="21" y1="12" x2="23" y2="12"></line>
-                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-                    </svg>
-                    <svg id="theme-icon-moon" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                        stroke-linejoin="round" style="display: none;">
-                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-                    </svg>
-                </button>
-            </li>
+            <!-- CTA Button: Sharp-edged Rosso Corsa link for inquiries -->
             <li><a href="#contact" class="btn-outline">Hire Me</a></li>
         </ul>
     </nav>
 
-    <!-- Hero Section -->
+    <!-- ==========================================
+         HERO SECTION: Full-bleed cinematic video canvas
+         ========================================== -->
     <header class="hero" id="home">
-        <div class="hero-blob hero-blob-1"></div>
-        <div class="hero-blob hero-blob-2"></div>
-        <div class="hero-content">
-            <p class="tagline anim-hero-tagline" id="hero-tagline">Software Developer | Full-Stack | AI</p>
-            <h1 class="anim-hero-title" id="hero-title">Building <span class="highlight">AI-Powered</span>
-                Full-Stack Solutions</h1>
-            <p class="subtitle anim-hero-subtitle" id="hero-subtitle"></p>
-            <div class="hero-btns anim-hero-btns">
-                <a href="#projects" class="btn-primary">Explore Work <span class="arrow">→</span></a>
-                <a href="#contact" class="btn-secondary">Let's Connect</a>
-            </div>
-        </div>
+        <!-- Background Video element for smooth cinematic rendering -->
+        <video class="hero-video-bg" autoplay loop muted playsinline>
+            <source src="hero.mp4" type="video/mp4">
+            <source src="hero.webm" type="video/webm">
+        </video>
     </header>
 
-    <!-- About Section -->
-    <section id="about" class="section fade-in-up">
+    <!-- ==========================================
+         HERO DETAILS SECTION: Welcome panel below video
+         ========================================== -->
+    <section class="section section-dark hero-details-section">
         <div class="container">
-            <h2 class="section-title">Who I Am</h2>
+            <div class="hero-content">
+                <!-- Tagline: Track-style uppercase developer classifications -->
+                <p class="tagline" id="hero-tagline">Software Developer | Full-Stack | AI</p>
+                
+                <!-- Headline: White display type with Rosso Corsa accent span -->
+                <h1 id="hero-title">Building <span class="highlight">AI-Powered</span> Full-Stack Solutions</h1>
+                <p class="subtitle" id="hero-subtitle"></p>
+                
+                <!-- CTAs: Primary brand button & outline secondary button -->
+                <div class="hero-btns">
+                    <a href="#projects" class="btn-primary">Explore Work</a>
+                    <a href="#contact" class="btn-secondary">Let's Connect</a>
+                </div>
+                
+                <!-- Spec Cells: F1 telemetry layout showing key metrics -->
+                <div class="hero-stats">
+                    <div class="hero-stat-item">
+                        <span class="hero-stat-num" id="stat-projects">2+</span>
+                        <span class="hero-stat-label">Projects Built</span>
+                    </div>
+                    <div class="hero-stat-item">
+                        <span class="hero-stat-num" id="stat-skills">6+</span>
+                        <span class="hero-stat-label">Tech Skills</span>
+                    </div>
+                    <div class="hero-stat-item">
+                        <span class="hero-stat-num" id="stat-certs">6+</span>
+                        <span class="hero-stat-label">Certifications</span>
+                    </div>
+                    <div class="hero-stat-item">
+                        <span class="hero-stat-num">92%</span>
+                        <span class="hero-stat-label">AI Relevance</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==========================================
+         ABOUT SECTION: Dark canvas panel
+         ========================================== -->
+    <section id="about" class="section section-dark">
+        <div class="container">
             <div class="about-grid">
+                <div>
+                    <h2 class="section-title">Who I Am</h2>
+                    <!-- Red vertical editorial line representing Rosso Corsa brand voltage -->
+                    <div class="about-accent-block"></div>
+                </div>
                 <div class="about-text">
-                    <p id="about-p1">Software Developer with experience in building AI-powered full-stack applications
-                        using React, Flask, and PostgreSQL.</p>
+                    <p id="about-p1">Software Developer with experience in building full-stack applications using React, Flask, and PostgreSQL.</p>
                     <p id="about-p2">Passionate about developing scalable, secure, and data-driven systems.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Education Section -->
-    <section id="education" class="section bg-alt fade-in-up">
+    <!-- ==========================================
+         EDUCATION SECTION: Light canvas editorial band
+         ========================================== -->
+    <section id="education" class="section section-light">
         <div class="container">
             <h2 class="section-title">Education</h2>
+            <!-- Chronological Timeline: Styled as clean, structured table rows -->
             <div class="education-timeline" id="education-container"></div>
         </div>
     </section>
 
-    <!-- Skills Section -->
-    <section id="skills" class="section fade-in-up">
+    <!-- ==========================================
+         SKILLS SECTION: Dark bento grid card panels
+         ========================================== -->
+    <section id="skills" class="section section-dark">
         <div class="container">
-            <h2 class="section-title">Tech Arsenal</h2>
+            <h2 class="section-title">Tech <span class="highlight">Arsenal</span></h2>
             <div class="skills-bento" id="skills-container"></div>
         </div>
     </section>
 
-    <!-- Projects Section -->
-    <section id="projects" class="section bg-alt fade-in-up">
+    <!-- ==========================================
+         PROJECTS SECTION: Light listing layout
+         ========================================== -->
+    <section id="projects" class="section section-light">
         <div class="container">
-            <h2 class="section-title">Projects worked on</h2>
+            <h2 class="section-title"><span class="highlight">Projects</span> Worked On</h2>
+            <!-- Projects Grid: Outputs cards with problem-solution comparison layouts -->
             <div class="projects-grid" id="projects-container"></div>
         </div>
     </section>
 
-    <!-- Certifications Gallery Section -->
-    <section id="certifications" class="section fade-in-up">
+    <!-- ==========================================
+         CERTIFICATIONS SECTION: Dark gallery listing
+         ========================================== -->
+    <section id="certifications" class="section section-dark">
         <div class="container">
             <h2 class="section-title">Certificates Gallery</h2>
-            <!-- Filter Buttons -->
-            <div class="cert-filters fade-in-up" id="cert-filters">
+            
+            <!-- Category Filters: Controls listing visibility dynamically -->
+            <div class="cert-filters" id="cert-filters">
                 <button class="cert-filter-btn active" data-filter="all">All</button>
                 <button class="cert-filter-btn" data-filter="Cisco">Cisco</button>
                 <button class="cert-filter-btn" data-filter="IBM">IBM</button>
                 <button class="cert-filter-btn" data-filter="Coursera">Coursera</button>
             </div>
-            <!-- Gallery Grid -->
+            
+            <!-- Gallery Grid: Renders credential badges in elevated panels -->
             <div class="cert-gallery" id="certifications-container"></div>
         </div>
     </section>
 
-    <!-- Certificate Preview Modal -->
+    <!-- ==========================================
+         MODALS & DIALOGS
+         ========================================== -->
+    
+    <!-- Certificate Preview: Holds iframe viewer for credential verification -->
     <div id="cert-modal" class="cert-modal-overlay" role="dialog" aria-modal="true" aria-label="Certificate Preview">
         <div class="cert-modal-box">
             <button class="cert-modal-close" id="cert-modal-close" aria-label="Close">&times;</button>
@@ -146,15 +190,25 @@
         </div>
     </div>
 
-    <!-- Contact Section -->
-    <section id="contact" class="section bg-alt fade-in-up">
+    <!-- Project Info: Dynamic panel for displaying extensions instructions -->
+    <div id="project-modal" class="cert-modal-overlay" role="dialog" aria-modal="true" aria-label="Project Information">
+        <div class="cert-modal-box">
+            <button class="cert-modal-close" id="project-modal-close" aria-label="Close">&times;</button>
+            <h3 class="cert-modal-title" id="project-modal-title">Project Details</h3>
+            <div class="cert-modal-body" id="project-modal-body"></div>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         CONTACT SECTION: Dark canvas interaction panel
+         ========================================== -->
+    <section id="contact" class="section section-dark">
         <div class="container">
             <div class="contact-wrapper">
-                <div class="contact-info slide-in-left">
-                    <h2 class="section-title" style="text-align: left;">Let's Build<br>Something <span
-                            class="highlight">Great</span></h2>
-                    <p class="contact-cta" id="contact-text">Have a project in mind or want to collaborate? Let's
-                        connect.</p>
+                <!-- Platform links: Vertical listings with metadata subtext -->
+                <div class="contact-info">
+                    <h2 class="section-title">Let's Build<br>Something <span class="highlight">Great</span></h2>
+                    <p class="contact-cta" id="contact-text">Have a project in mind or want to collaborate? Let's connect.</p>
 
                     <div class="social-links-vertical">
                         <a href="#" id="link-linkedin" class="social-link-item" target="_blank">
@@ -176,7 +230,8 @@
                     </div>
                 </div>
 
-                                <form id="contact-form" method="POST" class="contact-form slide-in-right" novalidate>
+                <!-- Email Form: Secure posting via Web3Forms API -->
+                <form id="contact-form" method="POST" class="contact-form" novalidate>
                     <!-- Honeypot spam protection (hidden from real users) -->
                     <input type="checkbox" name="botcheck" style="display:none;" tabindex="-1" autocomplete="off">
                     <div class="form-group">
@@ -189,20 +244,26 @@
                         <textarea id="form-message" name="message" placeholder="Tell me about your project..." rows="6" required></textarea>
                     </div>
                     <div id="form-status" class="form-status" style="display:none;"></div>
-                    <button type="submit" id="form-submit-btn" class="btn-primary" style="width: 100%;">Send Message <span class="arrow">↗</span></button>
+                    <!-- Submit: Sharp Rosso Corsa CTA -->
+                    <button type="submit" id="form-submit-btn" class="btn-primary" style="width: 100%;">Send Message</button>
                 </form>
             </div>
         </div>
     </section>
 
-    <footer class="footer">
-        <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
+    <!-- ==========================================
+         FOOTER: Dark canvas footer bar
+         ========================================== -->
+    <footer class="footer section-dark">
+        <div class="container">
             <p id="footer-text">&copy; 2026 G. Karthik Kumar Reddy. All Rights Reserved.</p>
             <div class="footer-socials"></div>
         </div>
     </footer>
 
-    <!-- ================= EDIT DASHBOARD MODAL ================= -->
+    <!-- ==========================================
+         EDIT DASHBOARD MODAL: Core Administration Tabset
+         ========================================== -->
     <div id="admin-modal" class="modal-overlay">
         <div class="modal-content">
             <div class="modal-header">
@@ -219,15 +280,8 @@
                     <button class="tab-btn" data-tab="tab-links">Links</button>
                 </div>
 
+                <!-- Tab: General configuration parameters -->
                 <div class="tab-content active" id="tab-general">
-                    <div class="admin-group">
-                        <label>Default Theme</label>
-                        <select id="input-theme"
-                            style="width: 100%; padding: 0.8rem; background: #0a0a0a; border: 1px solid #333; border-radius: 6px; color: #fff; font-family: var(--font-body);">
-                            <option value="dark">Dark Theme</option>
-                            <option value="light">Light Theme</option>
-                        </select>
-                    </div>
                     <div class="admin-group">
                         <label>Logo Text</label>
                         <input type="text" id="input-logo">
@@ -260,26 +314,28 @@
                         <label>Footer Text</label>
                         <input type="text" id="input-footer">
                     </div>
-                    <button class="btn-primary save-general-btn">Save General Settings</button>
+                    <button class="btn-primary save-general-btn" style="width: 100%;">Save General Settings</button>
                 </div>
 
+                <!-- Tab: Skills configuration list -->
                 <div class="tab-content" id="tab-skills">
-                    <button id="add-skill-btn" class="btn-outline" style="margin-bottom: 1rem;">+ Add New Skill</button>
+                    <button id="add-skill-btn" class="btn-secondary" style="margin-bottom: 1rem; width: 100%;">+ Add New Skill</button>
                     <div id="admin-skills-list" class="admin-list"></div>
                 </div>
 
+                <!-- Tab: Projects configuration list -->
                 <div class="tab-content" id="tab-projects">
-                    <button id="add-project-btn" class="btn-outline" style="margin-bottom: 1rem;">+ Add New
-                        Project</button>
+                    <button id="add-project-btn" class="btn-secondary" style="margin-bottom: 1rem; width: 100%;">+ Add New Project</button>
                     <div id="admin-projects-list" class="admin-list"></div>
                 </div>
 
+                <!-- Tab: Credentials/Certifications configuration list -->
                 <div class="tab-content" id="tab-certifications">
-                    <button id="add-cert-btn" class="btn-outline" style="margin-bottom: 1rem;">+ Add New
-                        Certification</button>
+                    <button id="add-cert-btn" class="btn-secondary" style="margin-bottom: 1rem; width: 100%;">+ Add New Certification</button>
                     <div id="admin-certs-list" class="admin-list"></div>
                 </div>
 
+                <!-- Tab: Social profiles links configurations -->
                 <div class="tab-content" id="tab-links">
                     <div class="admin-group">
                         <label>LinkedIn URL</label>
@@ -297,13 +353,14 @@
                         <label>Email Address</label>
                         <input type="email" id="input-link-email">
                     </div>
-                    <button class="btn-primary save-links-btn">Save Links</button>
+                    <button class="btn-primary save-links-btn" style="width: 100%;">Save Links</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <!-- Core logic script loader -->
+    <script src="script.js?v=19"></script>
 </body>
 
 </html>
