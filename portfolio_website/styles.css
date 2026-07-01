@@ -611,48 +611,95 @@ ul {
 }
 
 /* ==========================================================================
-   SKILLS SECTION: Bento grid of elevated modules
+   SKILLS SECTION: Categorized grid with SVG tech icons
    ========================================================================== */
 .skills-bento {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+/* Category group wrapper */
+.skills-category-group {
+  display: flex;
+  flex-direction: column;
   gap: var(--spacing-sm);
 }
 
+/* Category header with red accent line */
+.skills-category-header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding-bottom: var(--spacing-xxs);
+  border-bottom: 1px solid var(--hairline);
+}
+
+.skills-category-header::before {
+  content: '';
+  width: 3px;
+  height: 18px;
+  background: var(--primary);
+  flex-shrink: 0;
+}
+
+.skills-category-label {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--body);
+}
+
+/* Tech cards grid within each category */
+.skills-category-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: var(--spacing-xs);
+}
+
+/* Individual tech card */
 .skill-card {
   background-color: var(--canvas-elevated);
   border: 1px solid var(--hairline);
-  padding: var(--spacing-md);
+  padding: var(--spacing-sm) var(--spacing-xs);
   border-radius: var(--rounded-none);
   display: flex;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-xxs);
+  text-align: center;
   transition: border-color var(--transition), transform var(--transition), box-shadow var(--transition);
+  min-height: 120px;
 }
+
 .skill-card:hover {
   border-color: var(--primary);
   transform: translateY(-4px);
   box-shadow: var(--shadow-hover);
 }
 
-.skill-card i {
-  font-size: 24px;
-  color: var(--primary);
-  margin-bottom: var(--spacing-sm);
+/* SVG icon container */
+.skill-svg-icon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
 }
 
-.skill-category {
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 1.1px;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin-bottom: var(--spacing-xxxs);
+.skill-svg-icon svg {
+  width: 100%;
+  height: 100%;
 }
 
 .skill-name {
-  font-size: 18px;
-  font-weight: 500;
+  font-size: 14px;
+  font-weight: 600;
   color: var(--ink);
+  letter-spacing: 0.2px;
 }
 
 /* ==========================================================================
