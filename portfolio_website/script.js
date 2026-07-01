@@ -12,13 +12,13 @@
 // DEFAULT DATA STRUCTURE
 // ==========================================
 // Increment to force client browser localStorage reset during updates
-const DATA_VERSION = 20; 
+const DATA_VERSION = 21; 
 
 // Initial schema blueprint served on first load or database reset
 const defaultData = {
     version: DATA_VERSION,
     general: {
-        logo: "kkr_logo.png",
+        logo: "favicon.svg",
         tagline: "Software Developer | Full-Stack | AI",
         title: 'Building <span class="highlight">AI-Powered</span> Full-Stack Solutions',
         subtitle: "",

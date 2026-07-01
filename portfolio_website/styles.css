@@ -223,21 +223,55 @@ ul {
 }
 .loader-content {
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-sm);
 }
-.loader-logo {
-  font-size: 3rem;
-  font-weight: 500;
-  letter-spacing: -1.5px;
-  color: var(--ink);
+
+/* SVG preloader icon container */
+.loader-logo-svg {
+  width: 100px;
+  height: 100px;
 }
-.loader-logo span {
-  color: var(--primary);
+.preloader-icon {
+  width: 100%;
+  height: 100%;
 }
+
+/* Stroke draw-on animation */
+.svg-draw {
+  stroke-dasharray: 300;
+  stroke-dashoffset: 300;
+  animation: svgDrawIn 1.2s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+}
+.svg-draw-delay-1 { animation-delay: 0.25s; }
+.svg-draw-delay-2 { animation-delay: 0.5s; }
+.svg-draw-delay-3 { animation-delay: 0.75s; }
+
+@keyframes svgDrawIn {
+  to { stroke-dashoffset: 0; }
+}
+
+/* Fade-in animation for filled elements */
+.svg-fade {
+  opacity: 0;
+  animation: svgFadeIn 0.6s ease-out forwards;
+  animation-delay: 0.6s;
+}
+.svg-fade-delay-1 { animation-delay: 0.9s; }
+.svg-fade-delay-2 { animation-delay: 1.1s; }
+.svg-fade-delay-3 { animation-delay: 1.3s; }
+
+@keyframes svgFadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: var(--target-opacity, 0.7); transform: translateY(0); }
+}
+
 .loader-bar {
   width: 120px;
   height: 1px;
   background: var(--hairline);
-  margin: var(--spacing-sm) auto 0;
   position: relative;
   overflow: hidden;
 }
